@@ -93,7 +93,7 @@ function Layer:generateInnerLayer_underground(size)
             end
             
             -- add some rocks
-            if self.inner[i][j] == "dirt" then table.insert(self.structures, Rock:new(j, i, size)) end
+            table.insert(self.structures, Rock:new(j, i, size))
         end
         
     end

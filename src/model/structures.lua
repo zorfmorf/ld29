@@ -86,8 +86,16 @@ function Rock:getImage()
 end
 function Rock:yield()
     if self.type == "rocks" then ressources["stone"] = ressources["stone"] + 1 end
-    if self.type == "rocks_iron" then ressources["iron"] = ressources["iron"] + 1 end
-    if self.type == "rocks_gold" then ressources["gold"] = ressources["gold"] + 1 end
+    if self.type == "rocks_iron" then
+        if ressources["iron"] == nil then ressources["iron"] = 0 end
+        ressources["iron"] = ressources["iron"] + 1 
+    end
+    if self.type == "rocks_gold" then 
+        if ressources["gold"] == nil then
+            ressources["gold"] = 0
+        end
+        ressources["gold"] = ressources["gold"] + 1 
+    end
 end
 
 

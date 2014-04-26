@@ -48,6 +48,40 @@ local function clearRocks(lvl, x, y)
     end
 end
 
+-- tries to return struct at specified position
+local function getStruct(x, y)
+    
+    if world.layers[active].inner[y] == nil or world.layers[active].inner[y][x] == nil then return nil end
+    
+    for i,cand in pairs(world.layers[active].structures) do
+        
+        if cand.x == x and cand.y == y then
+            return cand
+        end
+    
+    end
+
+    return "nüscht nil" --- iiiieeeeeeeh was ist denn das da im code
+
+end
+
+
+local function isClearable(rock)
+    
+    -- DONT LOOK HERE ITS NOT HEALTHY
+    
+    local t = getStruct(rock.x - 1, rock.y)
+    if t ~= nil and (t == "nüscht nil" or t.__name ~= "rock") then return true end
+        t = getStruct(rock.x + 1, rock.y)
+    if t ~= nil and (t == "nüscht nil" or t.__name ~= "rock") then return true end
+        t = getStruct(rock.x, rock.y - 1)
+    if t ~= nil and (t == "nüscht nil" or t.__name ~= "rock") then return true end
+        t = getStruct(rock.x, rock.y + 1)
+    if t ~= nil and (t == "nüscht nil" or t.__name ~= "rock") then return true end
+    
+    return false
+end
+
 function gameHandler_update(dt)
     
     for i,id in pairs(structureEventQueue) do
@@ -63,7 +97,7 @@ function gameHandler_update(dt)
             
         end
         
-        if gameState == "free" and struct.__name == "rock" then
+        if gameState == "free" and struct.__name == "rock" and isClearable(struct) then
            
             struct:yield()
             world.layers[active].structures[id] = nil
