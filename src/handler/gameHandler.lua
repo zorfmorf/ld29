@@ -2,7 +2,7 @@
 world = nil
 
 function gameHandler_init()
-    world = World:new()
+    world = World:new(5)
 end
 
 
