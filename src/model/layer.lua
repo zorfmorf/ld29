@@ -11,7 +11,7 @@ function Layer:__init()
 end
 
 function Layer:generateOuterLayer(size)
-    --generate outer layer
+    
     self.outer = {}
     for i=1,6 do
         self.outer[i] = {}
@@ -30,7 +30,7 @@ function Layer:generateOuterLayer(size)
             end
             
             if (i <= 3 and j > 1 and j < size * 4) or ( i > 3 and j > 2 and j < size * 4 - 1) then 
-                self.outer[i][j] = "dirt" 
+                self.outer[i][j] = "cliff" 
             end
             
         end

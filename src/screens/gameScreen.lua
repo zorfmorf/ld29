@@ -39,7 +39,7 @@ end
 -- convert screen coordinates to world coordinates
 function gameScreen_convertScreen(x, y)
     local nx = ((x - xshift) - love.graphics.getWidth() / 2) / scaleV[scale] + love.graphics.getWidth() / 2
-    local ny = ((y - yshift) - love.graphics:getHeight() / 2) / scaleV[scale] + love.graphics:getHeight() / 2
+    local ny = ((y - yshift) - love.graphics.getHeight() / 2) / scaleV[scale] + love.graphics.getHeight() / 2
     return nx, ny
 end
 
@@ -98,6 +98,20 @@ function gameScreen_draw()
                 for k,entry in pairs(row) do
                     
                     if entry ~= nil then
+                        
+                        -- check for mouse position. again the bad style shit
+                        --if mouse hover then draw reddish
+                        local x, y = gameScreen_convertScreen( love.mouse.getPosition() )
+                        if math.abs(x - (world.x + (k - centerXIndex) * tilesize)) < tilesize / 2 and
+                            math.abs(y - (world.y + (j - centerYIndex  - baseHeight) * tilesize)) < tilesize / 2 then
+                            
+                            -- bad style but we will use this place to handle clicks as we already know everything relevant
+                            if love.mouse.isDown( "l" ) then 
+                                gameHandler_areaClicked(k, j)
+                            
+                            end
+                        end
+                        
                         love.graphics.draw(tileset[entry], 
                                             world.x + (k - centerXIndex) * tilesize, 
                                             world.y + (j - centerYIndex  - baseHeight) * tilesize,
@@ -148,14 +162,45 @@ function gameScreen_draw()
     love.graphics.origin()
     love.graphics.setColor(255, 255, 255, 255)
     
+    -- ressource display
     local sh = 10
-    
     for i,res in pairs(ressources) do
         
         love.graphics.draw(tileset[i], love.graphics.getWidth() - tilesize - 5, sh)
         love.graphics.print(res, love.graphics.getWidth() - tilesize - 30, sh + tilesize / 3)
         sh = sh + 40
         
+    end
+    
+    --build panel
+    sh = 10
+    for i,build in pairs(buildings) do
+        
+        love.graphics.setColor(255, 255, 255, 255)
+        
+        if not build:affordable() then 
+            love.graphics.setColor(100, 100, 100, 150)
+        else
+            
+            local x, y = love.mouse.getPosition()
+            if math.abs((love.graphics.getWidth() - tilesize - sh) - (x - tilesize / 2)) < tilesize / 2 and
+               math.abs((love.graphics.getHeight() - tilesize * 1.5) - (y - tilesize / 2)) < tilesize / 2 then
+                love.graphics.setColor(230, 130, 130, 150)
+                
+                -- bad style but we will use this place to handle clicks as we already know everything relevant
+                if love.mouse.isDown( "l" ) then gameHandler_buildClicked(i) end
+            end
+        end
+        
+        love.graphics.draw(tileset[i], love.graphics.getWidth() - tilesize - sh, love.graphics.getHeight() - tilesize * 1.5)
+        sh = sh + 40
+        
+    end
+    
+    -- draw mouse icon if necessary
+    
+    if gameState ~= "free" then
+        love.graphics.draw(tileset[gameState], love.mouse.getX(), love.mouse.getY(), 0, 1, 1, tilesize / 2, tilesize / 2)
     end
 
 end
