@@ -120,8 +120,12 @@ function gameHandler_update(dt)
         end
         
         if gameState == "free" and struct.__name == "hut" and struct:upgradable()  then
-           
+            
+            struct.durability = 10
+            struct.flagged = true
+            world.tasks[#world.tasks + 1] = {active, struct}
             struct:upgrade()
+            break
             
         end
         
@@ -147,6 +151,10 @@ function gameHandler_update(dt)
                         local hut = Hut:new(id[1], id[2])
                         world.tasks[#world.tasks + 1] = {active, hut}
                         table.insert(world.layers[active].structures, hut)
+                        buildings[gameState]:pay()
+                        gameState = "free"
+                        love.mouse.setVisible(true)
+                        break
                     end
                     
                     
@@ -156,9 +164,6 @@ function gameHandler_update(dt)
                         local ny = id[2] - 1
                         
                         if gameHandler_shaftCanBeBuilt(active, nx, ny) then
-                            
-                    
-                            world.layers[active - 1].available = true
                             
                             local shaft = Shaft:new(id[1], id[2])
                             world.tasks[#world.tasks + 1] = {active, shaft}

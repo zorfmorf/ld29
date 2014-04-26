@@ -120,6 +120,10 @@ function Layer:generateInnerLayer_Terrain(size)
     table.insert(self.structures, Hut:new(6, 5))
     table.insert(self.structures, Hut:new(8, 8))
     table.insert(self.structures, Hut:new(4, 6))
+    for i,hut in pairs(self.structures) do
+        hut.durability = 0
+        hut.stage = 1
+    end
     
     local v1 = Villager:new(6, 5, size)
     local v2 = Villager:new(8, 8, size)

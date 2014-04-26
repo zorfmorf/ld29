@@ -27,16 +27,24 @@ end
 Hut = Structure:extends{
     cost = { wood=1 },
     yield = {},
-    stage = 1,
+    stage = 0,
     upgrades = { {stone=1} }
 }
 Hut.__name = "hut"
 function Hut:getImage()
+    if self.stage == 0 then
+        return "sign"
+    end
     return "hut"..self.stage
+end
+function Hut:__init(x, y)
+    self.x = x
+    self.y = y
+    self.durability = 6
 end
 function Hut:upgradable()
     
-    if self.upgrades[self.stage] == nil then return false end
+    if self.upgrades[self.stage] == nil or self.durability > 0 then return false end
     
     for t,c in pairs(self.upgrades[self.stage]) do
         
@@ -46,11 +54,17 @@ function Hut:upgradable()
     
     return true
 end
-function Hut:upgrade()
+function Hut:upgrade() -- doesnt actually upgrade, only pays for upgrade
     for t,c in pairs(self.upgrades[self.stage]) do
         ressources[t] = ressources[t] - c
     end
-    self.stage = self.stage + 1
+end
+function Hut:harvest(dt)
+    self.durability = self.durability - dt
+    if self.durability <= 0 then
+        self.stage = math.min(self.stage + 1, 2)
+        self.flagged = false
+    end
 end
 
 

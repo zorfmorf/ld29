@@ -72,7 +72,17 @@ function Villager:update(dt)
         if self.layer == self.task[1] and self.x == task.x and self.y == task.y then
             self.path = nil
             task:harvest(dt)
-            if task.durability <= 0 then self.task = nil end
+            if task.durability <= 0 then 
+                self.task = nil 
+                if task.__name == "hut" then 
+                    local v = Villager:new(self.x, self.y, self.layer)
+                    world.layers[self.layer].villager[v.id] = v
+                end
+                
+                if task.__name == "shaft" then 
+                    world.layers[self.layer - 1].available = true
+                end
+            end
         else
             
             -- check if we need to change elevation
