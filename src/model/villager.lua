@@ -1,4 +1,5 @@
 
+local id = 1
 local speed = 2 -- speed in both directions per second
 
 Villager = class()
@@ -9,6 +10,8 @@ function Villager:__init(x, y, layer)
     self.y = y
     self.layer = layer
     self.path = nil
+    self.id = id
+    id = id + 1
 end
 
 function Villager:generateTask()
@@ -23,6 +26,20 @@ function Villager:generatePath()
     local current = { self.x, self.y }
 
     local task = self.task[2]
+    
+    if self.layer ~= self.task[1] then
+        
+        for i,cand in pairs(world.layers[self.layer].structures) do
+            
+            if (self.layer > self.task[1] and cand.__name == "shaft") or
+               (self.layer < self.task[1] and cand.__name == "shaft_bottom") then
+                task = cand
+                break
+            end
+                
+        end
+        
+    end
     
     
     while not (current[1] == task.x and current[2] == task.y) do
@@ -48,14 +65,37 @@ function Villager:update(dt)
     
     if self.task == nil then self:generateTask() return end
     
-    if self.task ~= nil and self.task[1] == self.layer then
+    if self.task ~= nil then
         
         local task = self.task[2]
         
-        if self.x == task.x and self.y == task.y then
+        if self.layer == self.task[1] and self.x == task.x and self.y == task.y then
+            self.path = nil
             task:harvest(dt)
             if task.durability <= 0 then self.task = nil end
         else
+            
+            -- check if we need to change elevation
+            if self.path ~= nil and #self.path == 0 then
+                for i,cand in pairs(world.layers[self.layer].structures) do
+                    if cand.x == self.x and cand.y == self.y and cand.__name == "shaft" then
+                        world.layers[self.layer].villager[self.id] = nil
+                        self.x = self.x - 2
+                        self.y = self.y - 1
+                        self.layer = self.layer - 1
+                        world.layers[self.layer].villager[self.id] = self
+                        self.path = nil
+                    end
+                    if cand.x == self.x and cand.y == self.y and cand.__name == "shaft_bottom" then
+                        world.layers[self.layer].villager[self.id] = nil
+                        self.x = self.x + 2
+                        self.y = self.y + 1
+                        self.layer = self.layer + 1
+                        world.layers[self.layer].villager[self.id] = self
+                        self.path = nil
+                    end
+                end
+            end
         
             if self.path == nil or #self.path == 0 then self:generatePath() return end
             

@@ -100,11 +100,12 @@ function gameHandler_update(dt)
     
     for i,id in pairs(structureEventQueue) do
         
-        fieldEventQueue = {}
+        --fieldEventQueue = {}
         
         local struct = world.layers[active].structures[id]
         
-        if gameState == "free" and struct.__name == "tree" and struct.flagged == false then
+        if gameState == "free" and struct.__name == "tree" and 
+            struct.durability > 0 and struct.flagged == false then
            
             struct.flagged = true
             world.tasks[#world.tasks + 1] = {active, struct}
@@ -143,8 +144,11 @@ function gameHandler_update(dt)
                 if buildings[gameState]:affordable() then
                    
                     if buildings[gameState].__name == "hut" then
-                        table.insert(world.layers[active].structures, Hut:new(id[1], id[2]))
+                        local hut = Hut:new(id[1], id[2])
+                        world.tasks[#world.tasks + 1] = {active, hut}
+                        table.insert(world.layers[active].structures, hut)
                     end
+                    
                     
                     if buildings[gameState].__name == "shaft" then
                         
@@ -153,6 +157,7 @@ function gameHandler_update(dt)
                         
                         if gameHandler_shaftCanBeBuilt(active, nx, ny) then
                             
+                    
                             world.layers[active - 1].available = true
                             
                             local shaft = Shaft:new(id[1], id[2])

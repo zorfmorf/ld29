@@ -267,8 +267,17 @@ end
 
 function gameScreen_click(x, y)
     
+    if math.abs(x - (love.graphics.getWidth() - tilesize - 5)) < tilesize / 1.5 and
+        math.abs(y - (love.graphics.getHeight() - tilesize * 8)) < tilesize / 1.5 and
+        gameHandler_canGoDown() then
+        gameHandler_layerdown()
+    end
     
-    
+    if math.abs(x - (love.graphics.getWidth() - tilesize - 5)) < tilesize / 1.5 and 
+        math.abs(y - (love.graphics.getHeight() - tilesize * 10 - 5)) < tilesize / 1.5 and
+        not world.layers[5].active then
+        gameHandler_layerup()
+    end
 end
 
 function gameScreen_Camera_shift(x , y)

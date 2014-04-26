@@ -121,9 +121,13 @@ function Layer:generateInnerLayer_Terrain(size)
     table.insert(self.structures, Hut:new(8, 8))
     table.insert(self.structures, Hut:new(4, 6))
     
-    table.insert(self.villager, Villager:new(6, 5, size))
-    table.insert(self.villager, Villager:new(8, 8, size))
-    table.insert(self.villager, Villager:new(4, 6, size))
+    local v1 = Villager:new(6, 5, size)
+    local v2 = Villager:new(8, 8, size)
+    local v3 = Villager:new(4, 6, size)
+    
+    self.villager[v1.id] = v1
+    self.villager[v2.id] = v2
+    self.villager[v3.id] = v3
     
     self.inner = {}
     
