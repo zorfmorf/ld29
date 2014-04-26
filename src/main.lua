@@ -2,7 +2,7 @@
 class = require 'misc/30logclean'
 
 require 'model/layer'
-require 'model/hut'
+require 'model/structures'
 require 'model/world'
 
 require 'handler/gameHandler'

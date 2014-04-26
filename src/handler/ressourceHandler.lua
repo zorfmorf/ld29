@@ -57,6 +57,18 @@ function ressourceHandler_loadTiles()
     imgData:paste(tileSource, 0, 0, 8 * tilesize, tilesize, tilesize, tilesize)
     tileset["dirt_edge_u"] = love.graphics.newImage(imgData)
     
+    --buildings and placeables
     imgData:paste(tileSource, 0, 0, 3 * tilesize, 2 * tilesize, tilesize, tilesize)
     tileset["hut1"] = love.graphics.newImage(imgData)
+    imgData:paste(tileSource, 0, 0, 2 * tilesize, 3 * tilesize, tilesize, tilesize)
+    tileset["tree1"] = love.graphics.newImage(imgData)
+    imgData:paste(tileSource, 0, 0, 3 * tilesize, 3 * tilesize, tilesize, tilesize)
+    tileset["tree2"] = love.graphics.newImage(imgData)
+    
+    
+    --icons
+    imgData:paste(tileSource, 0, 0, 0, 4 * tilesize, tilesize, tilesize)
+    tileset["wood"] = love.graphics.newImage(imgData)
+    imgData:paste(tileSource, 0, 0, tilesize, 4 * tilesize, tilesize, tilesize)
+    tileset["stone"] = love.graphics.newImage(imgData)
 end

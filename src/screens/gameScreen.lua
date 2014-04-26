@@ -36,6 +36,13 @@ function gameScreen_generateBackground(imgData)
     bkg = love.graphics.newImage(imgData)
 end
 
+-- convert screen coordinates to world coordinates
+function gameScreen_convertScreen(x, y)
+    local nx = ((x - xshift) - love.graphics.getWidth() / 2) / scaleV[scale] + love.graphics.getWidth() / 2
+    local ny = ((y - yshift) - love.graphics:getHeight() / 2) / scaleV[scale] + love.graphics:getHeight() / 2
+    return nx, ny
+end
+
 function gameScreen_draw()
     
     love.graphics.setBackgroundColor(0, 0, 0, 255)
@@ -91,7 +98,6 @@ function gameScreen_draw()
                 for k,entry in pairs(row) do
                     
                     if entry ~= nil then
-                        print(entry)
                         love.graphics.draw(tileset[entry], 
                                             world.x + (k - centerXIndex) * tilesize, 
                                             world.y + (j - centerYIndex  - baseHeight) * tilesize,
@@ -109,10 +115,23 @@ function gameScreen_draw()
         
             --draw structures
             for i,structure in pairs(layer.structures) do
+                
+                --if mouse hover then draw reddish
+                local x, y = gameScreen_convertScreen( love.mouse.getPosition() )
+                if math.abs(x - (world.x + (structure.x - centerXIndex) * tilesize)) < tilesize / 2 and
+                    math.abs(y - (world.y + (structure.y - centerYIndex  - baseHeight) * tilesize)) < tilesize / 2 then
+                    love.graphics.setColor(230, 130, 130, 150)
+                    
+                    -- bad style but we will use this place to handle clicks as we already know everything relevant
+                    if love.mouse.isDown( "l" ) then gameHandler_structureClicked(i) end
+                end
+                
                 love.graphics.draw(tileset[structure:getImage()], 
                                             world.x + (structure.x - centerXIndex) * tilesize, 
                                             world.y + (structure.y - centerYIndex  - baseHeight) * tilesize,
                                             0, 1, 1, tilesize / 2, tilesize / 2)
+                
+                love.graphics.setColor(255, 255, 255, 255)
             end
             
             break
@@ -125,11 +144,25 @@ function gameScreen_draw()
     love.graphics.setColor(0, 0, 0, 255)
     love.graphics.line(world.x + tilesize / 2, world.y + tilesize * 4 - tilesize / 2, world.x + tilesize / 2, lineHeight + tilesize / 2)
     
-    
-    
     -- now draw the hud
     love.graphics.origin()
+    love.graphics.setColor(255, 255, 255, 255)
     
+    local sh = 10
+    
+    for i,res in pairs(ressources) do
+        
+        love.graphics.draw(tileset[i], love.graphics.getWidth() - tilesize - 5, sh)
+        love.graphics.print(res, love.graphics.getWidth() - tilesize - 30, sh + tilesize / 3)
+        sh = sh + 40
+        
+    end
+
+end
+
+function gameScreen_click(x, y)
+    
+   
     
 end
 

@@ -40,6 +40,7 @@ end
 function inputHandler_mousepressed( x, y, button )
     if state == "ingame" then
         if button == "r" then oldMousePos = {x, y} end
+        if button == "l" then gameScreen_click(x, y) end
         if button == "wu" then gameScreen_Camera_zoomOut() end
         if button == "wd" then gameScreen_Camera_zoomIn() end
     end
