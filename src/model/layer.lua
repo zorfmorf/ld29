@@ -1,12 +1,15 @@
 
 Layer = class()
 
-function Layer:__init(size)
+function Layer:__init()
     
     self.active = false -- whether the player is viewing this layer
-    
     self.inner = nil
-    
+    self.outer = nil
+
+end
+
+function Layer:generateOuterLayer(size)
     --generate outer layer
     self.outer = {}
     for i=1,6 do
@@ -32,5 +35,71 @@ function Layer:__init(size)
         end
         
     end
+end
 
+
+function Layer:generateInnerLayer_underground(size)
+
+    self.inner = {}
+    self.inner[1] = {}
+    
+end
+
+function Layer:generateInnerLayer_Terrain(size)
+    
+    self.inner = {}
+    
+    local start = (size * 4) / 2
+    
+    -- first populate with grass
+    for i = 1, 2 + size * 2 do
+        
+        self.inner[i] = {}
+        
+        for j = 1, size * 4 do
+            
+            if j >= (start + 2) - i * 2 and j <= (start - 1) + i * 2 
+                and j >= (start) - ((2 + size * 2) - i) * 2 and j <= start + 1 + ((2 + size * 2) - i) * 2 then
+                
+                self.inner[i][j] = "grass"
+            
+            end 
+            
+        end
+        
+    end
+    
+    -- now make the edges pretty
+    for i,row in pairs(self.inner) do
+        
+        for j,entry in pairs(row) do
+            
+            if self.inner[i][j - 1] == nil and (self.inner[i - 1] == nil or self.inner[i - 1][j] == nil) then
+                self.inner[i][j] = "grass_edge_ul"
+            end
+            
+            if self.inner[i][j - 1] ~= nil and self.inner[i][j + 1] ~= nil and (self.inner[i - 1] == nil or self.inner[i - 1][j] == nil) then
+                self.inner[i][j] = "grass_edge_u"
+            end
+            
+            if self.inner[i][j - 1] ~= nil and self.inner[i][j + 1] ~= nil and (self.inner[i + 1] == nil or self.inner[i + 1][j] == nil) then
+                self.inner[i][j] = "grass_edge_d"
+            end
+            
+            if self.inner[i][j + 1] == nil and (self.inner[i - 1] == nil or self.inner[i - 1][j] == nil) then
+                self.inner[i][j] = "grass_edge_ur"
+            end
+            
+            if self.inner[i][j - 1] == nil and (self.inner[i + 1] == nil or self.inner[i + 1][j] == nil) then
+                self.inner[i][j] = "grass_edge_dl"
+            end
+            
+            if self.inner[i][j + 1] == nil and (self.inner[i + 1] == nil or self.inner[i + 1][j] == nil) then
+                self.inner[i][j] = "grass_edge_dr"
+            end
+            
+        end
+        
+    end
+    
 end
