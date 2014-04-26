@@ -138,6 +138,14 @@ function gameScreen_draw()
                     
                     -- bad style but we will use this place to handle clicks as we already know everything relevant
                     if love.mouse.isDown( "l" ) then gameHandler_structureClicked(i) end
+                    
+                    if structure.__name == "hut" and structure:upgradable() then
+                        love.graphics.setColor(130, 230, 130, 255)
+                        love.graphics.draw(tileset["arrow_up"], 
+                                            world.x + (structure.x - centerXIndex) * tilesize, 
+                                            world.y + (structure.y - centerYIndex  - baseHeight) * tilesize - tilesize * 0.8,
+                                            0, 1, 1, tilesize / 2, tilesize / 2)
+                    end
                 end
                 
                 love.graphics.draw(tileset[structure:getImage()], 

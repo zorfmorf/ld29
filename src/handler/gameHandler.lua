@@ -52,6 +52,8 @@ function gameHandler_update(dt)
     
     for i,id in pairs(structureEventQueue) do
         
+        fieldEventQueue = {}
+        
         local struct = world.layers[active].structures[id]
         
         if gameState == "free" and struct.__name == "tree" then
@@ -63,8 +65,14 @@ function gameHandler_update(dt)
         
         if gameState == "free" and struct.__name == "rock" then
            
+            struct:yield()
             world.layers[active].structures[id] = nil
-            ressources["stone"] = ressources["stone"] + 1
+            
+        end
+        
+        if gameState == "free" and struct.__name == "hut" and struct:upgradable()  then
+           
+            struct:upgrade()
             
         end
         
@@ -94,6 +102,7 @@ function gameHandler_update(dt)
                             -- now add shaft into lower layer
                             clearRocks(active - 1, nx, ny)
                             table.insert(world.layers[active - 1].structures, ShaftBottom:new(nx, ny))
+                            
                         end
                     end
                     

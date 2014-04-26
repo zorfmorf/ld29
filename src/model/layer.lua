@@ -93,9 +93,22 @@ function Layer:generateInnerLayer_underground(size)
             end
             
             -- add some rocks
-            if self.inner[i][j] == "dirt" then table.insert(self.structures, Rock:new(j, i)) end
+            if self.inner[i][j] == "dirt" then table.insert(self.structures, Rock:new(j, i, size)) end
         end
         
+    end
+    
+    if size == 1 then
+        local tx = math.random(2, 3)
+        local ty = math.random(2, 3)
+        for i,rock in pairs(self.structures) do
+           
+            if rock.x == tx and rock.y == ty then 
+               self.structures[i] = Diamond:new(tx, ty)
+               return 
+            end
+            
+        end
     end
     
 end
