@@ -2,7 +2,8 @@
 -----------------STRUCTURE
 Structure = class{
     cost = {},
-    yield = {}
+    yield = {},
+    flagged = false
 }
 function Structure:__init(x, y)
     self.x = x
@@ -59,8 +60,21 @@ Shaft = Structure:extends{
     yield = { stone=1 }
 }
 Shaft.__name = "shaft"
+function Shaft:__init(x, y)
+    self.x = x
+    self.y = y
+    self.durability = 8
+    self.image = "sign"
+end
 function Shaft:getImage()
-    return "shaft"
+    return self.image
+end
+function Shaft:harvest(dt)
+    self.durability = self.durability - dt
+    if self.durability <= 0 then
+        self.flagged = false
+        self.image = "shaft"
+    end
 end
 
 ----------------- SHAFT BOTTOM
@@ -113,7 +127,17 @@ function Tree:__init(x, y)
     self.t = math.random(1,2)
     self.x = x
     self.y = y
+    self.durability = 5
+    self.image = "tree"
+end
+function Tree:harvest(dt)
+    self.durability = self.durability - dt
+    if self.durability <= 0 then
+        self.image = "stump"
+        self.flagged = false
+        ressources["wood"] = ressources["wood"] + 1
+    end
 end
 function Tree:getImage()
-    return "tree"..self.t
+    return self.image..self.t
 end

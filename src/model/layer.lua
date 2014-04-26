@@ -6,7 +6,9 @@ function Layer:__init()
     self.active = false -- whether the player is viewing this layer
     self.inner = nil
     self.outer = nil
+    self.available = false -- if it can be seen by the user
     self.structures = {}
+    self.villager = {}
 
 end
 
@@ -118,6 +120,10 @@ function Layer:generateInnerLayer_Terrain(size)
     table.insert(self.structures, Hut:new(6, 5))
     table.insert(self.structures, Hut:new(8, 8))
     table.insert(self.structures, Hut:new(4, 6))
+    
+    table.insert(self.villager, Villager:new(6, 5, size))
+    table.insert(self.villager, Villager:new(8, 8, size))
+    table.insert(self.villager, Villager:new(4, 6, size))
     
     self.inner = {}
     

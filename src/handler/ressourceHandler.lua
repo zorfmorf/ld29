@@ -64,6 +64,8 @@ function ressourceHandler_loadTiles()
     tileset["hut1"] = love.graphics.newImage(imgData)
     imgData:paste(tileSource, 0, 0, 3 * tilesize, 2 * tilesize, tilesize, tilesize)
     tileset["hut2"] = love.graphics.newImage(imgData)
+    imgData:paste(tileSource, 0, 0, 5 * tilesize, 2 * tilesize, tilesize, tilesize)
+    tileset["sign"] = love.graphics.newImage(imgData)
     imgData:paste(tileSource, 0, 0, 4 * tilesize, 2 * tilesize, tilesize, tilesize)
     tileset["shaft"] = love.graphics.newImage(imgData)
     imgData:paste(tileSource, 0, 0, 4 * tilesize, 3 * tilesize, tilesize, tilesize)
@@ -88,6 +90,10 @@ function ressourceHandler_loadTiles()
     tileset["tree1"] = love.graphics.newImage(imgData)
     imgData:paste(tileSource, 0, 0, 3 * tilesize, 3 * tilesize, tilesize, tilesize)
     tileset["tree2"] = love.graphics.newImage(imgData)
+    imgData:paste(tileSource, 0, 0, 5 * tilesize, 3 * tilesize, tilesize, tilesize)
+    tileset["stump1"] = love.graphics.newImage(imgData)
+    imgData:paste(tileSource, 0, 0, 6 * tilesize, 3 * tilesize, tilesize, tilesize)
+    tileset["stump2"] = love.graphics.newImage(imgData)
     
     
     --icons
@@ -104,4 +110,11 @@ function ressourceHandler_loadTiles()
     imgData:paste(tileSource, 0, 0, tilesize, 6 * tilesize, tilesize, tilesize)
     tileset["arrow_down"] = love.graphics.newImage(imgData)
     
+    
+    charset = {}
+    tileSource = love.image.newImageData("res/villager.png")
+    local imgData = love.image.newImageData(8, 12)
+    imgData:paste(tileSource, 0, 0, 0, 0, 8, 12)
+    
+    villager = love.graphics.newImage(imgData)
 end

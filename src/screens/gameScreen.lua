@@ -132,8 +132,9 @@ function gameScreen_draw()
                 
                 --if mouse hover then draw reddish
                 local x, y = gameScreen_convertScreen( love.mouse.getPosition() )
-                if math.abs(x - (world.x + (structure.x - centerXIndex) * tilesize)) < tilesize / 2 and
-                    math.abs(y - (world.y + (structure.y - centerYIndex  - baseHeight) * tilesize)) < tilesize / 2 then
+                if structure.flagged ~= false or
+                    (math.abs(x - (world.x + (structure.x - centerXIndex) * tilesize)) < tilesize / 2 and
+                    math.abs(y - (world.y + (structure.y - centerYIndex  - baseHeight) * tilesize)) < tilesize / 2) then
                     love.graphics.setColor(230, 130, 130, 150)
                     
                     -- bad style but we will use this place to handle clicks as we already know everything relevant
@@ -161,6 +162,13 @@ function gameScreen_draw()
                 end
                 
                 love.graphics.setColor(255, 255, 255, 255)
+            end
+            
+            for i,guy in pairs(layer.villager) do
+                love.graphics.draw(villager, 
+                                    world.x + (guy.x - centerXIndex) * tilesize, 
+                                    world.y + (guy.y - centerYIndex  - baseHeight) * tilesize - tilesize,
+                                    0, 1, 1, 4, -tilesize - 4)
             end
             
             break
@@ -191,7 +199,7 @@ function gameScreen_draw()
     -- scale arrows
     local x, y = love.mouse.getPosition()
     
-    if not world.layers[1].active then
+    if gameHandler_canGoDown() then
         love.graphics.setColor(255, 255, 255, 255)
         local sc = 1
         if math.abs(x - (love.graphics.getWidth() - tilesize - 5)) < tilesize / 1.5 and 
@@ -247,12 +255,19 @@ function gameScreen_draw()
     if gameState ~= "free" then
         love.graphics.draw(tileset[gameState], love.mouse.getX(), love.mouse.getY(), 0, 1, 1, tilesize / 2, tilesize / 2)
     end
+    
+    if state == "gameover" then
+        love.graphics.setColor(0, 0, 0, 150)
+        love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+        love.graphics.setColor(255, 100, 100, 200)
+        love.graphics.print("Game over")
+    end
 
 end
 
 function gameScreen_click(x, y)
     
-   
+    
     
 end
 

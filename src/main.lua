@@ -3,6 +3,7 @@ class = require 'misc/30logclean'
 
 require 'model/layer'
 require 'model/structures'
+require 'model/villager'
 require 'model/world'
 
 require 'handler/gameHandler'
@@ -49,6 +50,10 @@ function love.draw()
     end
     
     if state == "ingame" then
+        gameScreen_draw()
+    end
+    
+    if state == "gameover" then
         gameScreen_draw()
     end
     

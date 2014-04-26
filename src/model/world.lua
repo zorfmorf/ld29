@@ -6,6 +6,8 @@ function World:__init(numberOfLayers)
     self.x = love.graphics:getWidth() / 2
     self.y = love.graphics:getHeight() + 400
     
+    self.tasks = {}
+    
     local n = 1
     if numberOfLayers ~= nil then n = numberOfLayers end
     
@@ -21,5 +23,6 @@ function World:__init(numberOfLayers)
             self.layers[i]:generateInnerLayer_underground(i)
         end
     end
+    self.layers[n].available = true
 end
 

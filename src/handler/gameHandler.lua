@@ -25,6 +25,11 @@ function gameHandler_init()
     buildings = {}
     buildings["hut1"] = Hut:new()
     buildings["shaft"] = Shaft:new()
+    
+end
+
+function gameHandler_canGoDown()
+    return active > 1 and world.layers[active - 1].available
 end
 
 function gameHandler_isTopLevel()
@@ -39,10 +44,19 @@ function gameHandler_shaftCanBeBuilt(lvl, x, y)
     return lvl > 1 and world.layers[lvl - 1].inner[y] ~= nil and world.layers[lvl - 1].inner[y][x] ~= nil
 end
 
+local function respawnDiamond()
+    for i,cand in pairs(world.layers[1].structures) do
+        if cand.__name == "rock" then
+            world.layers[1].structures[i] = Diamond:new(cand.x, cand.y)
+        end
+    end
+end
+
 local function clearRocks(lvl, x, y)
     for i,cand in pairs(world.layers[lvl].structures) do
         if cand.x == x and cand.y == y then
             world.layers[lvl].structures[i] = nil
+            if cand.__name == "diamond" then respawnDiamond() end
             return
         end
     end
@@ -90,10 +104,10 @@ function gameHandler_update(dt)
         
         local struct = world.layers[active].structures[id]
         
-        if gameState == "free" and struct.__name == "tree" then
+        if gameState == "free" and struct.__name == "tree" and struct.flagged == false then
            
-            world.layers[active].structures[id] = nil
-            ressources["wood"] = ressources["wood"] + 1
+            struct.flagged = true
+            world.tasks[#world.tasks + 1] = {active, struct}
             
         end
         
@@ -107,6 +121,12 @@ function gameHandler_update(dt)
         if gameState == "free" and struct.__name == "hut" and struct:upgradable()  then
            
             struct:upgrade()
+            
+        end
+        
+        if gameState == "free" and struct.__name == "diamond"  then
+           
+            state = "gameover"
             
         end
         
@@ -132,18 +152,24 @@ function gameHandler_update(dt)
                         local ny = id[2] - 1
                         
                         if gameHandler_shaftCanBeBuilt(active, nx, ny) then
-                            table.insert(world.layers[active].structures, Shaft:new(id[1], id[2]))
+                            
+                            world.layers[active - 1].available = true
+                            
+                            local shaft = Shaft:new(id[1], id[2])
+                            world.tasks[#world.tasks + 1] = {active, shaft}
+                            table.insert(world.layers[active].structures, shaft)
+                            
                             -- now add shaft into lower layer
                             clearRocks(active - 1, nx, ny)
                             table.insert(world.layers[active - 1].structures, ShaftBottom:new(nx, ny))
                             
+                            buildings[gameState]:pay()
+                            gameState = "free"
+                            love.mouse.setVisible(true)
+                            
                         end
                     end
                     
-                    buildings[gameState]:pay()
-                    gameState = "free"
-                    love.mouse.setVisible(true)
-                   
                 end
                 
             end
@@ -153,10 +179,18 @@ function gameHandler_update(dt)
         break
         
     end
-    
-    
+
     fieldEventQueue = {}
     
+    
+    -- update all villagers
+    for i=1,size do
+        for j,villy in pairs(world.layers[i].villager) do
+            
+           villy:update(dt)
+            
+        end
+    end
 end
 
 function gameHandler_areaClicked(x, y)
@@ -177,6 +211,8 @@ end
 function gameHandler_layerup()
     structureEventQueue = {}
     fieldEventQueue = {}
+    gameState = "free"
+    love.mouse.setVisible(true)
     if active < size then 
         world.layers[active].active = false
         active = active + 1
@@ -188,6 +224,8 @@ end
 function gameHandler_layerdown()
     structureEventQueue = {}
     fieldEventQueue = {}
+    gameState = "free"
+    love.mouse.setVisible(true)
     if active > 1 then 
         world.layers[active].active = false
         active = active - 1
