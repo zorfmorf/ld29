@@ -144,6 +144,13 @@ function gameScreen_draw()
                                             world.x + (structure.x - centerXIndex) * tilesize, 
                                             world.y + (structure.y - centerYIndex  - baseHeight) * tilesize,
                                             0, 1, 1, tilesize / 2, tilesize / 2)
+                if structure.__name == "shaft_bottom" then
+                    love.graphics.draw(tileset["shaft_up"], 
+                                            world.x + (structure.x - centerXIndex) * tilesize, 
+                                            world.y + (structure.y - centerYIndex  - baseHeight) * tilesize - tilesize,
+                                            0, 1, 1, tilesize / 2, tilesize / 2)
+                    
+                end
                 
                 love.graphics.setColor(255, 255, 255, 255)
             end
@@ -172,17 +179,47 @@ function gameScreen_draw()
         
     end
     
+    
+    -- scale arrows
+    local x, y = love.mouse.getPosition()
+    
+    if not world.layers[1].active then
+        love.graphics.setColor(255, 255, 255, 255)
+        local sc = 1
+        if math.abs(x - (love.graphics.getWidth() - tilesize - 5)) < tilesize / 1.5 and 
+            math.abs(y - (love.graphics.getHeight() - tilesize * 8)) < tilesize / 1.5 then
+            
+            sc = 1.5
+        end
+        
+        love.graphics.draw(tileset["arrow_down"], love.graphics.getWidth() - tilesize - 5, love.graphics.getHeight() - tilesize * 8, 0, 
+                        sc, sc, tilesize / 2, tilesize / 2)
+    end
+    
+    if not world.layers[5].active then
+        love.graphics.setColor(255, 255, 255, 255)
+        local sc = 1
+        if math.abs(x - (love.graphics.getWidth() - tilesize - 5)) < tilesize / 1.5 and 
+            math.abs(y - (love.graphics.getHeight() - tilesize * 10 - 5)) < tilesize / 1.5 then
+            
+            sc = 1.5
+        end
+        love.graphics.draw(tileset["arrow_up"], love.graphics.getWidth() - tilesize - 5, love.graphics.getHeight() - tilesize * 10 - 5, 0,
+                            sc, sc, tilesize / 2, tilesize / 2)
+    end
+    
     --build panel
     sh = 10
     for i,build in pairs(buildings) do
         
         love.graphics.setColor(255, 255, 255, 255)
         
-        if not build:affordable() then 
+        if world.layers[1].active or not gameHandler_LevelCanBeBuilt() or not build:affordable() 
+            or (not gameHandler_isTopLevel() and build.__name == "hut") then 
             love.graphics.setColor(100, 100, 100, 150)
         else
             
-            local x, y = love.mouse.getPosition()
+            
             if math.abs((love.graphics.getWidth() - tilesize - sh) - (x - tilesize / 2)) < tilesize / 2 and
                math.abs((love.graphics.getHeight() - tilesize * 1.5) - (y - tilesize / 2)) < tilesize / 2 then
                 love.graphics.setColor(230, 130, 130, 150)

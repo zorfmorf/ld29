@@ -41,6 +41,23 @@ function Shaft:getImage()
     return "shaft"
 end
 
+ShaftBottom = Structure:extends()
+ShaftBottom.__name= "shaft_bottom"
+function ShaftBottom:getImage()
+    return "shaft_bottom"
+end
+
+Rock = Structure:extends()
+Rock.__name = "rock"
+function Rock:__init(x, y)
+    self.t = math.random(1,2)
+    self.x = x
+    self.y = y
+end
+function Rock:getImage()
+    return "rocks"..self.t
+end
+
 Tree = Structure:extends()
 Tree.__name = "tree"
 function Tree:__init(x, y)

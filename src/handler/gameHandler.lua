@@ -27,6 +27,26 @@ function gameHandler_init()
     buildings["shaft"] = Shaft:new()
 end
 
+function gameHandler_isTopLevel()
+    return active >= size
+end
+
+function gameHandler_LevelCanBeBuilt()
+    return #world.layers[active].structures > 0
+end
+
+function gameHandler_shaftCanBeBuilt(lvl, x, y)
+    return lvl > 1 and world.layers[lvl - 1].inner[y] ~= nil and world.layers[lvl - 1].inner[y][x] ~= nil
+end
+
+local function clearRocks(lvl, x, y)
+    for i,cand in pairs(world.layers[lvl].structures) do
+        if cand.x == x and cand.y == y then
+            world.layers[lvl].structures[i] = nil
+            return
+        end
+    end
+end
 
 function gameHandler_update(dt)
     
@@ -38,6 +58,13 @@ function gameHandler_update(dt)
            
             world.layers[active].structures[id] = nil
             ressources["wood"] = ressources["wood"] + 1
+            
+        end
+        
+        if gameState == "free" and struct.__name == "rock" then
+           
+            world.layers[active].structures[id] = nil
+            ressources["stone"] = ressources["stone"] + 1
             
         end
         
@@ -58,7 +85,16 @@ function gameHandler_update(dt)
                     end
                     
                     if buildings[gameState].__name == "shaft" then
-                        table.insert(world.layers[active].structures, Shaft:new(id[1], id[2]))
+                        
+                        local nx = id[1] - 2
+                        local ny = id[2] - 1
+                        
+                        if gameHandler_shaftCanBeBuilt(active, nx, ny) then
+                            table.insert(world.layers[active].structures, Shaft:new(id[1], id[2]))
+                            -- now add shaft into lower layer
+                            clearRocks(active - 1, nx, ny)
+                            table.insert(world.layers[active - 1].structures, ShaftBottom:new(nx, ny))
+                        end
                     end
                     
                     buildings[gameState]:pay()
