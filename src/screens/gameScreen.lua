@@ -84,12 +84,14 @@ function gameScreen_draw()
         if layer.active then
             
             baseHeight = baseHeight + math.floor(#layer.inner / 2 + 0.5)
-                        
+             
+             -- draw tiles
             for j,row in pairs(layer.inner) do
             
                 for k,entry in pairs(row) do
                     
                     if entry ~= nil then
+                        print(entry)
                         love.graphics.draw(tileset[entry], 
                                             world.x + (k - centerXIndex) * tilesize, 
                                             world.y + (j - centerYIndex  - baseHeight) * tilesize,
@@ -104,6 +106,14 @@ function gameScreen_draw()
                 end
             
             end
+        
+            --draw structures
+            for i,structure in pairs(layer.structures) do
+                love.graphics.draw(tileset[structure:getImage()], 
+                                            world.x + (structure.x - centerXIndex) * tilesize, 
+                                            world.y + (structure.y - centerYIndex  - baseHeight) * tilesize,
+                                            0, 1, 1, tilesize / 2, tilesize / 2)
+            end
             
             break
         
@@ -114,6 +124,12 @@ function gameScreen_draw()
     -- definition line
     love.graphics.setColor(0, 0, 0, 255)
     love.graphics.line(world.x + tilesize / 2, world.y + tilesize * 4 - tilesize / 2, world.x + tilesize / 2, lineHeight + tilesize / 2)
+    
+    
+    
+    -- now draw the hud
+    love.graphics.origin()
+    
     
 end
 

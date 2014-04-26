@@ -29,7 +29,7 @@ function ressourceHandler_loadTiles()
     
     --cliff
     imgData:paste(tileSource, 0, 0, tilesize * 2, 1 * tilesize, tilesize, tilesize)
-    tileset["cliff"] = love.graphics.newImage(imgData)
+    tileset["dirt"] = love.graphics.newImage(imgData)
     imgData:paste(tileSource, 0, 0, 0, 1 * tilesize, tilesize, tilesize)
     tileset["cliff_edge_l1"] = love.graphics.newImage(imgData)
     imgData:paste(tileSource, 0, 0, 0, 2 * tilesize, tilesize, tilesize)
@@ -43,4 +43,20 @@ function ressourceHandler_loadTiles()
     imgData:paste(tileSource, 0, 0, tilesize, 3 * tilesize, tilesize, tilesize)
     tileset["cliff_edge_r3"] = love.graphics.newImage(imgData)
     
+    -- "rock" sort of terrain
+    imgData:paste(tileSource, 0, 0, 3 * tilesize, tilesize, tilesize, tilesize)
+    tileset["dirt_edge_dl"] = love.graphics.newImage(imgData)
+    imgData:paste(tileSource, 0, 0, 4 * tilesize, tilesize, tilesize, tilesize)
+    tileset["dirt_edge_ul"] = love.graphics.newImage(imgData)
+    imgData:paste(tileSource, 0, 0, 5 * tilesize, tilesize, tilesize, tilesize)
+    tileset["dirt_edge_ur"] = love.graphics.newImage(imgData)
+    imgData:paste(tileSource, 0, 0, 6 * tilesize, tilesize, tilesize, tilesize)
+    tileset["dirt_edge_dr"] = love.graphics.newImage(imgData)
+    imgData:paste(tileSource, 0, 0, 7 * tilesize, tilesize, tilesize, tilesize)
+    tileset["dirt_edge_d"] = love.graphics.newImage(imgData)
+    imgData:paste(tileSource, 0, 0, 8 * tilesize, tilesize, tilesize, tilesize)
+    tileset["dirt_edge_u"] = love.graphics.newImage(imgData)
+    
+    imgData:paste(tileSource, 0, 0, 3 * tilesize, 2 * tilesize, tilesize, tilesize)
+    tileset["hut1"] = love.graphics.newImage(imgData)
 end

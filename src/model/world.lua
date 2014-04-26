@@ -18,8 +18,7 @@ function World:__init(numberOfLayers)
             self.layers[i]:generateInnerLayer_Terrain(i)
             
         else
-           -- self.layers[i]:generateInnerLayer_underground(i)
-           self.layers[i]:generateInnerLayer_Terrain(i)
+           self.layers[i]:generateInnerLayer_underground(i)
         end
     end
 end
