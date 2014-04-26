@@ -96,6 +96,17 @@ local function isClearable(rock)
     return false
 end
 
+local function plotIsEmpty(x, y)
+    
+    for i,cand in pairs(world.layers[active].structures) do
+        
+        if cand.x == x and cand.y == y then return false end
+        
+    end
+    
+    return true
+end
+
 function gameHandler_update(dt)
     
     for i,id in pairs(structureEventQueue) do
@@ -112,14 +123,16 @@ function gameHandler_update(dt)
             
         end
         
-        if gameState == "free" and struct.__name == "rock" and isClearable(struct) then
-           
-            struct:yield()
-            world.layers[active].structures[id] = nil
+        if gameState == "free" and struct.__name == "rock" and isClearable(struct) and struct.flagged == false then
+            
+            struct.flagged = true
+            world.tasks[#world.tasks + 1] = {active, struct}
+            
+            break
             
         end
         
-        if gameState == "free" and struct.__name == "hut" and struct:upgradable()  then
+        if gameState == "free" and struct.__name == "hut" and struct:upgradable() and struct.flagged == false then
             
             struct.durability = 10
             struct.flagged = true
@@ -129,10 +142,11 @@ function gameHandler_update(dt)
             
         end
         
-        if gameState == "free" and struct.__name == "diamond"  then
-           
-            state = "gameover"
+        if gameState == "free" and struct.__name == "diamond" and struct.flagged == false then
             
+            struct.flagged = true
+            world.tasks[#world.tasks + 1] = {active, struct}
+            break
         end
         
     end
@@ -147,7 +161,7 @@ function gameHandler_update(dt)
                
                 if buildings[gameState]:affordable() then
                    
-                    if buildings[gameState].__name == "hut" then
+                    if buildings[gameState].__name == "hut" and plotIsEmpty(id[1], id[2]) then
                         local hut = Hut:new(id[1], id[2])
                         world.tasks[#world.tasks + 1] = {active, hut}
                         table.insert(world.layers[active].structures, hut)
@@ -158,7 +172,7 @@ function gameHandler_update(dt)
                     end
                     
                     
-                    if buildings[gameState].__name == "shaft" then
+                    if buildings[gameState].__name == "shaft" and plotIsEmpty(id[1], id[2]) then
                         
                         local nx = id[1] - 2
                         local ny = id[2] - 1
@@ -230,6 +244,12 @@ function gameHandler_layerup()
     end
 end
 
+function gameHandler_deselect()
+    if gameState ~= "free" then
+        gameState = "free"
+        love.mouse.setVisible(true)
+    end
+end
 
 function gameHandler_layerdown()
     structureEventQueue = {}

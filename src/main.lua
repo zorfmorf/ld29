@@ -53,7 +53,7 @@ function love.draw()
         gameScreen_draw()
     end
     
-    if state == "gameover" then
+    if state == "fin" then
         gameScreen_draw()
     end
     
