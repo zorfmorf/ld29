@@ -24,6 +24,20 @@ function questHandler_acceptQuest()
     end
 end
 
+function questHandler_getBerny()
+    if currentQuest == 3 or currentQuest == 4 then
+        return berny_stressed
+    end
+    if currentQuest == 5 or currentQuest == 6 or currentQuest == 7 then
+        return berny_angry
+    end
+    if currentQuest == 8 then
+        return berny_fearful
+    end
+        
+    return berny_normal
+end
+
 function questHandler_newQuest()
     return newQuest == 1
 end

@@ -27,10 +27,9 @@ function inputHandler_keypressed(key, isrepeat)
     if key == "escape" then love.event.push("quit") end
     
     if state == "ingame" then
-        if key == " " then state = "fin" end
         if key == "up" then gameHandler_layerup() end
         if key == "down" then gameHandler_layerdown() end
-        if key == "return" then questHandler_acceptQuest() end
+        if key == " " then questHandler_acceptQuest() end
     end
    
 end

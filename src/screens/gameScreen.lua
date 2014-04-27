@@ -18,9 +18,11 @@ local particles = nil
 local finFont = nil
 local finalpha = 0
 
+local brightness = 190 -- if < 255 it dimms the whole world down
+
 function gameScreen_init()
-    finFont = love.graphics.newFont(60)
-    questFont = love.graphics.newFont(22)
+    finFont = love.graphics.newFont("font/SFPixelate.ttf", 80)
+    questFont = love.graphics.newFont("font/SFPixelate.ttf",22)
     local size = math.max(love.graphics:getWidth(), love.graphics:getHeight())
     local imgData = love.image.newImageData(size, size)
     for i=1,size*2 do
@@ -206,7 +208,7 @@ function gameScreen_draw()
     
     love.graphics.translate(xshift / scaleV[scale], yshift / scaleV[scale])
     
-    love.graphics.setColor(255, 255, 255, 255)
+    love.graphics.setColor(brightness, brightness, brightness, 255)
     
     local lineHeight = 0
     
@@ -310,7 +312,7 @@ function gameScreen_draw()
                     
                 end
                 
-                love.graphics.setColor(255, 255, 255, 255)
+                love.graphics.setColor(brightness, brightness, brightness, 255)
             end
             
             for i,guy in pairs(layer.villager) do
@@ -344,22 +346,22 @@ function gameScreen_draw()
         local sh = 10
         if ressources["wood"] ~= nil then        
             love.graphics.draw(tileset["wood"], love.graphics.getWidth() - tilesize - 5, sh)
-            love.graphics.print(ressources["wood"], love.graphics.getWidth() - tilesize - 30, sh + tilesize / 3)
+            love.graphics.print(ressources["wood"], love.graphics.getWidth() - tilesize - 40, sh + tilesize / 3)
             sh = sh + 40
         end
         if ressources["stone"] ~= nil then        
             love.graphics.draw(tileset["stone"], love.graphics.getWidth() - tilesize - 5, sh)
-            love.graphics.print(ressources["stone"], love.graphics.getWidth() - tilesize - 30, sh + tilesize / 3)
+            love.graphics.print(ressources["stone"], love.graphics.getWidth() - tilesize - 40, sh + tilesize / 3)
             sh = sh + 40
         end
         if ressources["iron"] ~= nil then        
             love.graphics.draw(tileset["iron"], love.graphics.getWidth() - tilesize - 5, sh)
-            love.graphics.print(ressources["iron"], love.graphics.getWidth() - tilesize - 30, sh + tilesize / 3)
+            love.graphics.print(ressources["iron"], love.graphics.getWidth() - tilesize - 40, sh + tilesize / 3)
             sh = sh + 40
         end
         if ressources["gold"] ~= nil then        
             love.graphics.draw(tileset["gold"], love.graphics.getWidth() - tilesize - 5, sh)
-            love.graphics.print(ressources["gold"], love.graphics.getWidth() - tilesize - 30, sh + tilesize / 3)
+            love.graphics.print(ressources["gold"], love.graphics.getWidth() - tilesize - 40, sh + tilesize / 3)
             sh = sh + 40
         end
         
@@ -438,11 +440,13 @@ function gameScreen_draw()
         love.graphics.setColor(0, 0, 0, 180)
         love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
         love.graphics.setColor(255, 255, 255, 255)
-        love.graphics.draw(berny, love.graphics.getWidth() / 2 - 300, love.graphics.getHeight() / 2, 0, 1, 1, 32, 32)
+        love.graphics.draw(questHandler_getBerny(), love.graphics.getWidth() / 2 - 300, love.graphics.getHeight() / 2, 0, 1, 1, 64, 64)
         love.graphics.setFont(questFont)
         local w, wrap = questFont:getWrap(questHandler_getCurrentQuestText(), 600)
         love.graphics.printf(questHandler_getCurrentQuestText(), love.graphics.getWidth() / 2 - 200,
             love.graphics.getHeight() / 2, 600, "left", 0, 1, 1, 0, questFont:getHeight() * wrap / 2)
+        love.graphics.print("Press space to go on", love.graphics.getWidth() / 2 - 200,
+            love.graphics.getHeight() / 2 + questFont:getHeight() * wrap / 2 + 50)
     end
     
     if state == "fin" then
@@ -484,7 +488,7 @@ end
 function gameScreen_Camera_shift(x , y)
    
    xshift = math.max(-500, math.min(xshift + x, 500))
-   yshift = math.max(-500, math.min(yshift + y, 200))
+   yshift = math.max(-900, math.min(yshift + y, 200))
     
 end
 

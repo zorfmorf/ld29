@@ -1,7 +1,10 @@
 
 function ressourceHandler_loadTiles()
     
-    berny = love.graphics.newImage("res/berny.png")
+    berny_normal = love.graphics.newImage("res/berny_normal.png")
+    berny_angry = love.graphics.newImage("res/berny_angry.png")
+    berny_stressed = love.graphics.newImage("res/berny_stressed.png")
+    berny_fearful = love.graphics.newImage("res/berny_fearful.png")
     
     tileset = {}
     
