@@ -1,6 +1,9 @@
 
 local oldMousePos = nil
 
+local konamichain = {"up", "up", "down", "down", "left", "right", "left", "right", "b", "a",}
+local konamicurrent = 1
+
 function inputHandler_update(dt)
     
     if state == "ingame" then
@@ -26,7 +29,18 @@ function inputHandler_keypressed(key, isrepeat)
    
     if key == "escape" then love.event.push("quit") end
     
-    if state == "loading" then if key == " " then loadScreen_spacePressed() end end
+    if state == "loading" then
+        if konamichain[konamicurrent] ~= nil and key == konamichain[konamicurrent] then 
+            konamicurrent = konamicurrent + 1 
+            if konamichain[konamicurrent] == nil then
+                loadScreen_konamiCode()
+            end    
+        else
+            if konamichain[konamicurrent] ~= nil then konamicurrent = 1 end
+        end
+        
+        if key == " " then loadScreen_spacePressed() end
+    end
     
     if state == "ingame" then
         if key == "up" then gameHandler_layerup() end

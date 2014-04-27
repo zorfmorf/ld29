@@ -16,6 +16,8 @@ require 'screens/loadScreen'
 
 function love.load()
     
+    love.audio.setVolume( 1.0 )
+    
     -- debugger
     --if arg[#arg] == "-debug" then require("mobdebug").start() end
     

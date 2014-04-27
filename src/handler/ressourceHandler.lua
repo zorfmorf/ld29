@@ -1,12 +1,13 @@
 
 function ressourceHandler_loadTiles()
     
+    -- major berny
     berny_normal = love.graphics.newImage("res/berny_normal.png")
     berny_angry = love.graphics.newImage("res/berny_angry.png")
     berny_stressed = love.graphics.newImage("res/berny_stressed.png")
     berny_fearful = love.graphics.newImage("res/berny_fearful.png")
     
-    
+    -- tut files
     tut_mouse = love.graphics.newImage("res/mouse.png")
     tut_build = love.graphics.newImage("res/build.png")
     tut_ressources = love.graphics.newImage("res/ressources.png")
