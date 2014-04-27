@@ -409,7 +409,7 @@ function gameScreen_draw()
             love.graphics.setColor(255, 255, 255, 255)
             
             if world.layers[1].active or not gameHandler_LevelCanBeBuilt() or not build:affordable() 
-                or (not gameHandler_isTopLevel() and build.__name == "hut") then 
+                or (not gameHandler_isTopLevel() and (build.__name == "hut" or build.__name == "smith")) then 
                 love.graphics.setColor(100, 100, 100, 150)
             else
                 

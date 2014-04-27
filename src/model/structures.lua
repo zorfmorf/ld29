@@ -27,7 +27,7 @@ Hut = Structure:extends{
     cost = { wood=1 },
     yield = {},
     stage = 0,
-    upgrades = { {stone=1} }
+    upgrades = { {stone=2, wood=1} }
 }
 Hut.__name = "hut"
 function Hut:getImage()
@@ -39,7 +39,7 @@ end
 function Hut:__init(x, y)
     self.x = x
     self.y = y
-    self.durability = 3
+    self.durability = 15
     self.t = math.random(1, 2)
 end
 function Hut:upgradable()
@@ -73,13 +73,13 @@ end
 
 --------------------SMITHY
 Smith = Structure:extends{
-    cost = { wood=1,iron=1,stone=1 }
+    cost = { wood=2,iron=2,stone=2 }
 }
 Smith.__name = "smith"
 function Smith:__init(x, y)
     self.x = x
     self.y = y
-    self.durability = 3
+    self.durability = 15
     self.image = "sign"
 end
 function Smith:getImage()
@@ -103,7 +103,7 @@ Shaft.__name = "shaft"
 function Shaft:__init(x, y)
     self.x = x
     self.y = y
-    self.durability = 3
+    self.durability = 20
     self.image = "sign"
 end
 function Shaft:getImage()
@@ -134,7 +134,7 @@ function Rock:__init(x, y, level)
     self.x = x
     self.y = y
     self.level = level
-    self.durability = 3
+    self.durability = 15
     self.type = "rocks"
     if level < 4 then if math.random(1,3) == 1 then self.type = "rocks_iron" self.t = math.random(1,2) end end
     if level < 3 then if math.random(1,5) == 1 then self.type = "rocks_gold" self.t = math.random(1,2) end end
@@ -177,7 +177,7 @@ Diamond.__name = "diamond"
 function Diamond:__init(x, y)
     self.x = x
     self.y = y
-    self.durability = 3
+    self.durability = 30
 end
 function Diamond:getImage()
     return "diamond"
@@ -197,7 +197,7 @@ function Tree:__init(x, y)
     self.t = math.random(1,2)
     self.x = x
     self.y = y
-    self.durability = 3
+    self.durability = 8
     self.image = "tree"
 end
 function Tree:harvest(dt)

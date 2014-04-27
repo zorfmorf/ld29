@@ -54,14 +54,17 @@ end
 
 function gameHandler_allowHut()
     buildings["hut11"] = Hut:new()
+    snd_unlock:play()
 end
 
 function gameHandler_allowShaft()
     buildings["shaft"] = Shaft:new()
+    snd_unlock:play()
 end
 
 function gameHandler_allowSmithy()
     buildings["smith"] = Smith:new()
+    snd_unlock:play()
 end
 
 function gameHandler_canGoDown()
@@ -107,6 +110,8 @@ local function getStruct(x, y)
     
     if world.layers[active].inner[y] == nil or world.layers[active].inner[y][x] == nil then return nil end
     
+    if world.layers[active].inner[y][x]:len() == 12 then return nil end
+    
     for i,cand in pairs(world.layers[active].structures) do
         
         if cand.x == x and cand.y == y then
@@ -148,6 +153,19 @@ end
 
 function gameHandler_update(dt)
     
+    if state == "ingame" then
+        
+        if not mus_amb:isPlaying() then mus_amb:play() end
+        
+    end
+    
+    if state == "fin" then
+        
+        mus_amb:stop()
+        if not mus_boss:isPlaying() then mus_boss:play() end
+        
+    end
+    
     for i,id in pairs(structureEventQueue) do
         
         --fieldEventQueue = {}
@@ -173,7 +191,7 @@ function gameHandler_update(dt)
         
         if gameState == "free" and struct.__name == "hut" and struct:upgradable() and struct.flagged == false then
             
-            struct.durability = 10
+            struct.durability = 20
             struct.flagged = true
             world.tasks[#world.tasks + 1] = {active, struct}
             struct:upgrade()
@@ -239,6 +257,7 @@ function gameHandler_update(dt)
                             buildings[gameState]:pay()
                             gameState = "free"
                             love.mouse.setVisible(true)
+                            break
                             
                         end
                     end
@@ -246,6 +265,8 @@ function gameHandler_update(dt)
                 end
                 
             end
+            
+            snd_unable:play()
             
         end
         

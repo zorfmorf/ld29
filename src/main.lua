@@ -26,6 +26,7 @@ function love.load()
     state = "loading"
     
     ressourceHandler_loadTiles()
+    ressourceHandler_loadAudioFiles()
     gameHandler_init()
     gameScreen_init()
     loadScreen_init()

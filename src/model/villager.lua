@@ -5,6 +5,18 @@ local speed = 2 -- speed in both directions per second
 Villager = class()
 Villager.__name = "Villager"
 
+
+local function playSound()
+    
+    local rnd = math.random(1, 4)
+    
+    if rnd == 1 then snd_build1:stop() snd_build1:play() end
+    if rnd == 2 then snd_build2:stop() snd_build2:play() end
+    if rnd == 3 then snd_build3:stop() snd_build3:play() end
+    if rnd == 4 then snd_build4:stop() snd_build4:play() end
+    
+end
+
 function Villager:__init(x, y, layer)
     self.x = x
     self.y = y
@@ -119,13 +131,16 @@ function Villager:update(dt)
     
     if self.task ~= nil then
         
-        self.animcycle = self.animcycle + dt * 12
-        
-        if self.animcycle >= 3 then
-            self.animcycle = self.animcycle - 3
+        if self.action == "harvest" then
+            self.animcycle = self.animcycle + dt * 3
+        else 
+            self.animcycle = self.animcycle + dt * 12
         end
         
-        
+        if self.animcycle >= 3 then
+            self.animcycle = 0
+            if self.action == "harvest" then playSound() end
+        end
         
         local task = self.task[2]
         

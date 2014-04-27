@@ -1,4 +1,24 @@
 
+function ressourceHandler_loadAudioFiles()
+    
+    mus_boss = love.audio.newSource("res/boss.ogg", "static")
+    mus_amb = love.audio.newSource("res/music.ogg", "static")
+    mus_amb:setLooping(true)
+    snd_build1 = love.audio.newSource("res/build1.wav", "static")
+    snd_build2 = love.audio.newSource("res/build2.wav", "static")
+    snd_build3 = love.audio.newSource("res/build3.wav", "static")
+    snd_build4 = love.audio.newSource("res/build5.wav", "static")
+    snd_doing = love.audio.newSource("res/doing.wav", "static")
+    snd_explosion1 = love.audio.newSource("res/explosion.wav", "static")
+    snd_explosion2 = love.audio.newSource("res/explosion2.wav", "static")
+    snd_rumble = love.audio.newSource("res/rumble.wav", "static")
+    snd_unable = love.audio.newSource("res/unable.wav", "static")
+    snd_unable:setVolume(0.8)
+    snd_wud = love.audio.newSource("res/wud.wav", "static")
+    snd_unlock = love.audio.newSource("res/unlock.wav", "static")
+    
+end
+
 function ressourceHandler_loadTiles()
     
     -- major berny
