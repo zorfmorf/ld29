@@ -130,14 +130,15 @@ Rock = Structure:extends()
 Rock.__name = "rock"
 
 function Rock:__init(x, y, level)
-    self.t = math.random(1,2)
+    self.t = math.random(1,4)
     self.x = x
     self.y = y
     self.level = level
     self.durability = 3
     self.type = "rocks"
-    if level < 4 then if math.random(1,3) == 1 then self.type = "rocks_iron" end end
-    if level < 3 then if math.random(1,5) == 1 then self.type = "rocks_gold" end end
+    if level < 4 then if math.random(1,3) == 1 then self.type = "rocks_iron" self.t = math.random(1,2) end end
+    if level < 3 then if math.random(1,5) == 1 then self.type = "rocks_gold" self.t = math.random(1,2) end end
+    if level == 1 then self.type = "rocks_gold" self.t = math.random(1,2) end
 end
 function Rock:getImage()
     return self.type..self.t

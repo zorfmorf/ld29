@@ -6,6 +6,8 @@ local scaleV = {0.5, 0.7, 0.85, 1, 1.15, 1.3, 1.5}
 
 tilesize = 32
 
+local startupTime = 5
+
 local stars = nil
 local bkg = nil
 local bkgrotation = 0
@@ -62,6 +64,11 @@ function gameScreen_init()
 end
 
 function gameScreen_update(dt)
+    
+    if startupTime > 0 then
+        startupTime = math.max(0, startupTime - dt)
+        if startupTime == 0 then questHandler_start() end
+    end
     
     bkgrotation = bkgrotation - dt * 0.01
     

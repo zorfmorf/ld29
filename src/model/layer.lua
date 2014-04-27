@@ -95,7 +95,9 @@ function Layer:generateInnerLayer_underground(size)
             end
             
             -- add some rocks
-            table.insert(self.structures, Rock:new(j, i, size))
+            if self.inner[i][j]:len() < 9 or self.inner[i][j] == "dirt_edge_u" or self.inner[i][j] == "dirt_edge_d" then
+                table.insert(self.structures, Rock:new(j, i, size))
+            end
         end
         
     end
@@ -118,7 +120,7 @@ end
 function Layer:generateInnerLayer_Terrain(size)
     
     table.insert(self.structures, Hut:new(6, 5))
-    table.insert(self.structures, Hut:new(8, 8))
+    table.insert(self.structures, Hut:new(4, 5))
     table.insert(self.structures, Hut:new(4, 6))
     for i,hut in pairs(self.structures) do
         hut.durability = 0
@@ -126,7 +128,7 @@ function Layer:generateInnerLayer_Terrain(size)
     end
     
     local v1 = Villager:new(6, 5, size)
-    local v2 = Villager:new(8, 8, size)
+    local v2 = Villager:new(4, 8, size)
     local v3 = Villager:new(4, 6, size)
     
     self.villager[v1.id] = v1
@@ -147,18 +149,17 @@ function Layer:generateInnerLayer_Terrain(size)
             if j >= (start + 2) - i * 2 and j <= (start - 1) + i * 2 
                 and j >= (start) - ((2 + size * 2) - i) * 2 and j <= start + 1 + ((2 + size * 2) - i) * 2 then
                 
-                self.inner[i][j] = "grass"..math.random(1,2)
+                local rand = math.random(1,7)
+                if rand > 4 then rand = 1 end
                 
-                if j > size * 2 and i > size and math.random(1,4) == 1 then
-                    table.insert(self.structures, Tree:new(j, i))
-                end
+                self.inner[i][j] = "grass"..rand
             end 
             
         end
         
     end
     
-    -- now make the edges pretty
+    -- now make the edges pretty and add trees
     for i,row in pairs(self.inner) do
         
         for j,entry in pairs(row) do
@@ -185,6 +186,14 @@ function Layer:generateInnerLayer_Terrain(size)
             
             if self.inner[i][j + 1] == nil and (self.inner[i + 1] == nil or self.inner[i + 1][j] == nil) then
                 self.inner[i][j] = "grass_edge_dr"
+            end
+            
+            -- tree
+            if (self.inner[i][j] == "grass_edge_d" or self.inner[i][j] == "grass_edge_u" or self.inner[i][j]:len() < 8) and j > 6 then
+                
+                if math.random(1, math.max(20 - j, 1)) <= 3 then
+                    table.insert(self.structures, Tree:new(j, i))
+                end
             end
             
         end

@@ -1,12 +1,13 @@
 
 local quest = {}
-local currentQuest = 1
+local currentQuest = 0
 
-local newQuest = 1
+local newQuest = 0
 
 function questHandler_init()
     
-    quest[1] = {"Look at the conditions we have to live in! Huts made of twigs and leafs! To be shared by many! Any beggar has a better life than us! This needs to change!\n But before we can start we need more WOOD.\n Go fell some TREES!", "Fell some trees", 0}
+    quest[0] = {"Placeholder", nil, 0}
+    quest[1] = {"Look at the conditions we have to live in! Huts made of twigs and leafs! To be shared by many! Any beggar has a better life than me ... us! This needs to change!\n But before we can start we need more WOOD.\n Go fell some TREES!", "Fell some trees", 0}
     quest[2] = {"Excellent! Now that we gathered some wood we can finally BUILD more HUTS! Two should suffice!", "Build huts", 0}
     quest[3] = {"That took quite long, didn't it? Hurry up, we need some stone. And to get stone we need a mineshaft.", "Build mineshaft", 0}
     quest[4] = {"You're not the fastest one are you? \n Well enought of that. Now that we have access to stone we can finally upgrade our huts! Get us some stone and use it to improve our huts. And make sure that hurry this time, will you?.", "Gather Stone, Upgrade huts", 0}
@@ -50,6 +51,15 @@ function questHandler_getShortQuestText()
     return quest[currentQuest][2]
 end
 
+function questHandler_start()
+    
+    if currentQuest == 0 then
+        currentQuest = currentQuest + 1
+        newQuest = 1
+    end
+    
+end
+
 function questHandler_treeCut()
     if currentQuest == 1 then
         quest[1][3] = quest[1][3] + 1
@@ -73,12 +83,9 @@ function questHandler_hutBuilt()
 end
 
 function questHandler_goldMined()
-    if currentQuest == 6 then
-        quest[currentQuest][3] = quest[currentQuest][3] + 1
-        if quest[currentQuest][3] >= 2 then
-            currentQuest = currentQuest + 1
-            newQuest = 1
-        end
+    if currentQuest ~= 8 then
+        currentQuest = 7
+        newQuest = 1
     end
 end
 
