@@ -163,6 +163,7 @@ function gameHandler_update(dt)
     
     if state == "fin" then
         
+        showHelp = false
         mus_amb:stop()
         if not mus_boss:isPlaying() then mus_boss:play() end
         

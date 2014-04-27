@@ -125,10 +125,6 @@ function Villager:update(dt)
         if self.action ~= "burn" then self.action = "idle" end
     end
     
-    if self.action == "burn" and self.task == nil then
-        print(" And have no task")
-    end
-    
     if self.task ~= nil then
         
         if self.action == "harvest" then

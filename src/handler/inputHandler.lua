@@ -48,7 +48,7 @@ function inputHandler_keypressed(key, isrepeat)
         if key == " " then questHandler_acceptQuest() end
         
         if key == "f1" then showHelp = not showHelp end
-        if key == "return" then state = "fin" end
+        --if key == "return" then state = "fin" end
     end
    
 end
