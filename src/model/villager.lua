@@ -46,16 +46,26 @@ function Villager:generatePath()
                 
         local new = {0, 0, 1}
         
-        if current[2] < task.y then new[2] = 1 end
-        if current[2] > task.y then new[2] = -1 end
-        if new[2] == 0 and current[1] > task.x then new[1] = -1 end
-        if new[2] == 0 and current[1] < task.x then new[1] = 1 end
+        local dir = math.random(1, 2)
+        
+        if dir == 1 and current[2] < task.y then new[2] = 1 end
+        if dir == 1 and current[2] > task.y then new[2] = -1 end
+        if dir == 2 and current[1] > task.x then new[1] = -1 end
+        if dir == 2 and current[1] < task.x then new[1] = 1 end
+        if dir == 1 and new[2] == 0 and current[1] > task.x then new[1] = -1 end
+        if dir == 1 and new[2] == 0 and current[1] < task.x then new[1] = 1 end
+        if dir == 2 and new[1] == 0 and current[2] > task.y then new[2] = -1 end
+        if dir == 2 and new[1] == 0 and current[2] < task.y then new[2] = 1 end
         
         if new[1] == 0 and new[2] == 0 then print("Error!!!!!!!!!!") break end
+        
+        if world.layers[self.layer].inner[current[2] + new[2]] ~= nil and
+            world.layers[self.layer].inner[current[2] + new[2]][current[1] + new[1]] ~= nil then
 
-        self.path[#self.path + 1] = new
-        current[1] = current[1] + new[1]
-        current[2] = current[2] + new[2]
+            self.path[#self.path + 1] = new
+            current[1] = current[1] + new[1]
+            current[2] = current[2] + new[2]
+        end
 
     end
     

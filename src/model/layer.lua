@@ -147,7 +147,7 @@ function Layer:generateInnerLayer_Terrain(size)
             if j >= (start + 2) - i * 2 and j <= (start - 1) + i * 2 
                 and j >= (start) - ((2 + size * 2) - i) * 2 and j <= start + 1 + ((2 + size * 2) - i) * 2 then
                 
-                self.inner[i][j] = "grass"
+                self.inner[i][j] = "grass"..math.random(1,2)
                 
                 if j > size * 2 and i > size and math.random(1,4) == 1 then
                     table.insert(self.structures, Tree:new(j, i))

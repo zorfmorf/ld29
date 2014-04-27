@@ -15,8 +15,11 @@ local fintimer = 0
 local fintimer2 = 0
 local findirection = 0
 local particles = nil
+local finFont = nil
+local finalpha = 0
 
 function gameScreen_init()
+    finFont = love.graphics.newFont(60)
     local size = math.max(love.graphics:getWidth(), love.graphics:getHeight())
     local imgData = love.image.newImageData(size, size)
     for i=1,size*2 do
@@ -83,8 +86,6 @@ function gameScreen_update(dt)
             
         end
         
-        if finstate > 0 then particles:update(dt) end
-        
         if finstate == 1 then
             
             if fintimer > 5 then
@@ -126,12 +127,33 @@ function gameScreen_update(dt)
     
         if finstate == 3 then
             
+            particles:update(dt)
+            
             if fintimer > 0.1 then
                 findirection = -findirection
                 fintimer = 0
             end
             
             xshift = xshift + dt * 100 * findirection
+            yshift = yshift + dt * 20
+            
+            if yshift > 500 then
+                finstate = 4
+            end
+            
+        end
+        
+        if finstate == 4 then
+            particles:update(dt)
+            
+            if fintimer > 0.1 then
+                findirection = -findirection
+                fintimer = 0
+            end
+            
+            xshift = xshift + dt * 100 * findirection
+            
+            finalpha = math.min(255, finalpha + dt * 20)
             
         end
         
@@ -405,6 +427,18 @@ function gameScreen_draw()
     if state == "fin" then
         love.graphics.setColor(255, 255, 255, 255)
         love.graphics.draw(particles, love.graphics:getWidth() / 2, love.graphics.getHeight() * 1.3)
+        
+        if finstate == 4 then
+            
+            love.graphics.setColor(0, 0, 0, finalpha)
+            love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+            
+            love.graphics.setColor(215, 141, 141, finalpha)
+            love.graphics.setFont(finFont)
+            love.graphics.print("fin", love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, 
+                0, 1, 1, finFont:getWidth("fin") / 2, finFont:getHeight() / 2)
+            
+        end
         
     end
     

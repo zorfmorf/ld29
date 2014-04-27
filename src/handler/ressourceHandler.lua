@@ -9,7 +9,9 @@ function ressourceHandler_loadTiles()
     
     -- grass
     imgData:paste(tileSource, 0, 0, 8 * tilesize, 0, tilesize, tilesize)
-    tileset["grass"] = love.graphics.newImage(imgData)
+    tileset["grass1"] = love.graphics.newImage(imgData)
+    imgData:paste(tileSource, 0, 0, 9 * tilesize, 0, tilesize, tilesize)
+    tileset["grass2"] = love.graphics.newImage(imgData)
     imgData:paste(tileSource, 0, 0, 0 * tilesize, 0, tilesize, tilesize)
     tileset["grass_edge_dl"] = love.graphics.newImage(imgData)
     imgData:paste(tileSource, 0, 0, 1 * tilesize, 0, tilesize, tilesize)
