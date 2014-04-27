@@ -39,7 +39,7 @@ end
 function Hut:__init(x, y)
     self.x = x
     self.y = y
-    self.durability = 6
+    self.durability = 3
 end
 function Hut:upgradable()
     
@@ -76,7 +76,7 @@ Shaft.__name = "shaft"
 function Shaft:__init(x, y)
     self.x = x
     self.y = y
-    self.durability = 8
+    self.durability = 3
     self.image = "sign"
 end
 function Shaft:getImage()
@@ -106,7 +106,7 @@ function Rock:__init(x, y, level)
     self.x = x
     self.y = y
     self.level = level
-    self.durability = 20
+    self.durability = 3
     self.type = "rocks"
     if level < 4 then if math.random(1,3) == 1 then self.type = "rocks_iron" end end
     if level < 3 then if math.random(1,5) == 1 then self.type = "rocks_gold" end end
@@ -147,7 +147,7 @@ Diamond.__name = "diamond"
 function Diamond:__init(x, y)
     self.x = x
     self.y = y
-    self.durability = 50
+    self.durability = 3
 end
 function Diamond:getImage()
     return "diamond"
@@ -167,7 +167,7 @@ function Tree:__init(x, y)
     self.t = math.random(1,2)
     self.x = x
     self.y = y
-    self.durability = 5
+    self.durability = 3
     self.image = "tree"
 end
 function Tree:harvest(dt)

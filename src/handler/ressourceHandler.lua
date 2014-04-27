@@ -113,7 +113,7 @@ function ressourceHandler_loadTiles()
     
     charset = {}
     tileSource = love.image.newImageData("res/villager.png")
-    local imgData = love.image.newImageData(8, 12)
+    imgData = love.image.newImageData(8, 12)
     imgData:paste(tileSource, 0, 0, 0, 0, 8, 12)
     
     villager = love.graphics.newImage(imgData)

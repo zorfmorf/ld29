@@ -1,26 +1,150 @@
 
 local xshift = 0
 local yshift = 0
-local scale = 2
+local scale = 4
 local scaleV = {0.5, 0.7, 0.85, 1, 1.15, 1.3, 1.5}
 
 tilesize = 32
 
+local stars = nil
 local bkg = nil
+local bkgrotation = 0
+
+local finstate = 0
+local fintimer = 0
+local fintimer2 = 0
+local findirection = 0
+local particles = nil
 
 function gameScreen_init()
+    local size = math.max(love.graphics:getWidth(), love.graphics:getHeight())
+    local imgData = love.image.newImageData(size, size)
+    for i=1,size*2 do
+        
+        local x, y = math.random(1, size - 2), math.random(1, size - 2)
+       
+        imgData:setPixel(x, y, 255, 255, 255, 255)
+        imgData:setPixel(x + 1, y,  255, 255, 255, 100)
+        imgData:setPixel(x, y + 1, 255, 255, 255, 100)
+        imgData:setPixel(x - 1, y, 255, 255, 255, 100)
+        imgData:setPixel(x, y - 1, 255, 255, 255, 100)
+        
+    end
+    stars = love.graphics.newImage(imgData)
     
+    -- generate ending particle system
+    local system = love.graphics.newParticleSystem( love.graphics.newImage("res/fire.png"), 400 )
+    system:setPosition( 0, 0 )
+    system:setOffset( 0, 0 )
+    system:setBufferSize( 5000 )
+    system:setEmissionRate( 1000 )
+    system:setEmitterLifetime( -1 )
+    system:setParticleLifetime( 5, 5 )
+    system:setColors( 255, 100, 0, 0, 255, 255, 0, 123 )
+    system:setSizes( 1, 3, 1 )
+    system:setSpeed( 400, 500  )
+    system:setDirection( math.rad(270) )
+    system:setSpread( math.rad(90) )
+    system:setRotation( math.rad(0), math.rad(0) )
+    system:setSpin( math.rad(0.5), math.rad(1), 1 )
+    system:setRadialAcceleration( 0 )
+    system:setTangentialAcceleration( 0 )
+    system:setLinearAcceleration( 0, 200, 0, 400 )
+    
+    particles = system
+
 end
 
 function gameScreen_update(dt)
     
+    bkgrotation = bkgrotation - dt * 0.01
+    
+    if state == "fin" then
+        
+        
+        fintimer = fintimer + dt
+        
+        if finstate == 0 then
+            scale = 4
+            
+            if gameHandler_isBottomLevel() and yshift <= -500 and xshift == 0 then
+                finstate = 1
+                fintimer = 0
+            end
+            
+            if not gameHandler_isBottomLevel() and fintimer > 1 then
+                fintimer = 0
+                gameHandler_layerdown()
+            end
+            
+            if yshift > -500 then yshift = yshift - dt * 200 end
+            if xshift > 0 then xshift = math.max(0, xshift - dt * 200) end
+            if xshift < 0 then xshift = math.min(xshift + dt * 200, 0) end
+            
+        end
+        
+        if finstate > 0 then particles:update(dt) end
+        
+        if finstate == 1 then
+            
+            if fintimer > 5 then
+                
+                fintimer = 0
+                finstate = 2
+                findirection = 1
+                
+            end
+            
+        end
+        
+        if finstate == 2 then
+            
+            fintimer2 = fintimer2 + dt
+            
+            if fintimer > 0.1 then
+                findirection = -findirection
+                fintimer = 0
+            end
+            
+            xshift = xshift + dt * 100 * findirection
+            yshift = math.min(0, yshift + 100 * dt)
+            
+            if fintimer2 > 1 then
+                fintimer2 = 0
+                if not gameHandler_isTopLevel() then gameHandler_layerup() end
+                if yshift >= 0 and scale > 1 then scale = scale - 1 end
+            end
+            
+            if yshift >= 0 and scale == 1 then
+                finstate = 3
+                fintimer = 0
+                fintimer2 = 0
+                particles:start()
+            end
+        
+        end
+    
+        if finstate == 3 then
+            
+            if fintimer > 0.1 then
+                findirection = -findirection
+                fintimer = 0
+            end
+            
+            xshift = xshift + dt * 100 * findirection
+            
+        end
+        
+        love.mouse.setVisible(false)
+    end
+
 end
 
 function gameScreen_generateBackground(imgData)
     
     for i = 0,imgData:getHeight() - 1 do
        
-        local factor = math.max(0, i - love.graphics:getHeight() / 1.9) / (imgData:getHeight() - 1) 
+        local factor = math.max(0, i - love.graphics:getHeight() / 2.9) / (imgData:getHeight() - 1) 
        
         for j= 0,imgData:getWidth() - 1 do
             
@@ -45,9 +169,11 @@ end
 
 function gameScreen_draw()
     
-    love.graphics.setBackgroundColor(0, 0, 0, 255)
+    --love.graphics.setBackgroundColor(191, 226, 248, 100)
     
-    love.graphics.setColor(255, 255, 255, 255)
+    love.graphics.setColor(150, 200, 210, 200)
+    love.graphics.draw(stars, love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, bkgrotation, 
+        1, 1, stars:getWidth() / 2, stars:getWidth() / 2)
     love.graphics.draw(bkg, 0, 0)
     
     love.graphics.translate(love.graphics.getWidth() / 2, love.graphics:getHeight() / 2)
@@ -185,83 +311,103 @@ function gameScreen_draw()
     love.graphics.origin()
     love.graphics.setColor(255, 255, 255, 255)
     
-    -- ressource display
-    local sh = 10
-    for i,res in pairs(ressources) do
+    
+    if state == "ingame" then
+    
+        --menu bar ?
+        --love.graphics.rectangle("fill", love.graphics.getWidth() - 50, 0, 50, love.graphics.getHeight())
         
-        love.graphics.draw(tileset[i], love.graphics.getWidth() - tilesize - 5, sh)
-        love.graphics.print(res, love.graphics.getWidth() - tilesize - 30, sh + tilesize / 3)
-        sh = sh + 40
-        
-    end
-    
-    
-    -- scale arrows
-    local x, y = love.mouse.getPosition()
-    
-    if gameHandler_canGoDown() then
-        love.graphics.setColor(255, 255, 255, 255)
-        local sc = 1
-        if math.abs(x - (love.graphics.getWidth() - tilesize - 5)) < tilesize / 1.5 and 
-            math.abs(y - (love.graphics.getHeight() - tilesize * 8)) < tilesize / 1.5 then
-            
-            sc = 1.5
+        -- ressource display
+        local sh = 10
+        if ressources["wood"] ~= nil then        
+            love.graphics.draw(tileset["wood"], love.graphics.getWidth() - tilesize - 5, sh)
+            love.graphics.print(ressources["wood"], love.graphics.getWidth() - tilesize - 30, sh + tilesize / 3)
+            sh = sh + 40
+        end
+        if ressources["stone"] ~= nil then        
+            love.graphics.draw(tileset["stone"], love.graphics.getWidth() - tilesize - 5, sh)
+            love.graphics.print(ressources["stone"], love.graphics.getWidth() - tilesize - 30, sh + tilesize / 3)
+            sh = sh + 40
+        end
+        if ressources["iron"] ~= nil then        
+            love.graphics.draw(tileset["iron"], love.graphics.getWidth() - tilesize - 5, sh)
+            love.graphics.print(ressources["iron"], love.graphics.getWidth() - tilesize - 30, sh + tilesize / 3)
+            sh = sh + 40
+        end
+        if ressources["gold"] ~= nil then        
+            love.graphics.draw(tileset["gold"], love.graphics.getWidth() - tilesize - 5, sh)
+            love.graphics.print(ressources["gold"], love.graphics.getWidth() - tilesize - 30, sh + tilesize / 3)
+            sh = sh + 40
         end
         
-        love.graphics.draw(tileset["arrow_down"], love.graphics.getWidth() - tilesize - 5, love.graphics.getHeight() - tilesize * 8, 0, 
-                        sc, sc, tilesize / 2, tilesize / 2)
-    end
-    
-    if not world.layers[5].active then
-        love.graphics.setColor(255, 255, 255, 255)
-        local sc = 1
-        if math.abs(x - (love.graphics.getWidth() - tilesize - 5)) < tilesize / 1.5 and 
-            math.abs(y - (love.graphics.getHeight() - tilesize * 10 - 5)) < tilesize / 1.5 then
-            
-            sc = 1.5
-        end
-        love.graphics.draw(tileset["arrow_up"], love.graphics.getWidth() - tilesize - 5, love.graphics.getHeight() - tilesize * 10 - 5, 0,
-                            sc, sc, tilesize / 2, tilesize / 2)
-    end
-    
-    --build panel
-    sh = 10
-    for i,build in pairs(buildings) do
         
-        love.graphics.setColor(255, 255, 255, 255)
+        -- scale arrows
+        local x, y = love.mouse.getPosition()
         
-        if world.layers[1].active or not gameHandler_LevelCanBeBuilt() or not build:affordable() 
-            or (not gameHandler_isTopLevel() and build.__name == "hut") then 
-            love.graphics.setColor(100, 100, 100, 150)
-        else
-            
-            
-            if math.abs((love.graphics.getWidth() - tilesize - sh) - (x - tilesize / 2)) < tilesize / 2 and
-               math.abs((love.graphics.getHeight() - tilesize * 1.5) - (y - tilesize / 2)) < tilesize / 2 then
-                love.graphics.setColor(230, 130, 130, 150)
+        if gameHandler_canGoDown() then
+            love.graphics.setColor(255, 255, 255, 255)
+            local sc = 1
+            if math.abs(x - (love.graphics.getWidth() - tilesize - 5)) < tilesize / 1.5 and 
+                math.abs(y - (love.graphics.getHeight() - tilesize * 8)) < tilesize / 1.5 then
                 
-                -- bad style but we will use this place to handle clicks as we already know everything relevant
-                if love.mouse.isDown( "l" ) then gameHandler_buildClicked(i) end
+                sc = 1.5
             end
+            
+            love.graphics.draw(tileset["arrow_down"], love.graphics.getWidth() - tilesize - 5, love.graphics.getHeight() - tilesize * 8, 0, 
+                            sc, sc, tilesize / 2, tilesize / 2)
         end
         
-        love.graphics.draw(tileset[i], love.graphics.getWidth() - tilesize - sh, love.graphics.getHeight() - tilesize * 1.5)
-        sh = sh + 40
+        if not world.layers[5].active then
+            love.graphics.setColor(255, 255, 255, 255)
+            local sc = 1
+            if math.abs(x - (love.graphics.getWidth() - tilesize - 5)) < tilesize / 1.5 and 
+                math.abs(y - (love.graphics.getHeight() - tilesize * 10 - 5)) < tilesize / 1.5 then
+                
+                sc = 1.5
+            end
+            love.graphics.draw(tileset["arrow_up"], love.graphics.getWidth() - tilesize - 5, love.graphics.getHeight() - tilesize * 10 - 5, 0,
+                                sc, sc, tilesize / 2, tilesize / 2)
+        end
+        
+        --build panel
+        sh = 10
+        for i,build in pairs(buildings) do
+            
+            love.graphics.setColor(255, 255, 255, 255)
+            
+            if world.layers[1].active or not gameHandler_LevelCanBeBuilt() or not build:affordable() 
+                or (not gameHandler_isTopLevel() and build.__name == "hut") then 
+                love.graphics.setColor(100, 100, 100, 150)
+            else
+                
+                
+                if math.abs((love.graphics.getWidth() - tilesize - 10) - (x - tilesize / 2)) < tilesize / 2 and
+                   math.abs((love.graphics.getHeight() - tilesize * 1.5 - sh) - (y - tilesize / 2)) < tilesize / 2 then
+                    love.graphics.setColor(230, 130, 130, 150)
+                    
+                    -- bad style but we will use this place to handle clicks as we already know everything relevant
+                    if love.mouse.isDown( "l" ) then gameHandler_buildClicked(i) end
+                end
+            end
+            
+            love.graphics.draw(tileset[i], love.graphics.getWidth() - tilesize - 10, love.graphics.getHeight() - tilesize * 1.5 - sh)
+            sh = sh + 40
+            
+        end
+        
+        -- draw mouse icon if necessary
+        
+        if gameState ~= "free" then
+            love.graphics.draw(tileset[gameState], love.mouse.getX(), love.mouse.getY(), 0, 1, 1, tilesize / 2, tilesize / 2)
+        end
+    end
+    
+    if state == "fin" then
+        love.graphics.setColor(255, 255, 255, 255)
+        love.graphics.draw(particles, love.graphics:getWidth() / 2, love.graphics.getHeight() * 1.3)
         
     end
     
-    -- draw mouse icon if necessary
-    
-    if gameState ~= "free" then
-        love.graphics.draw(tileset[gameState], love.mouse.getX(), love.mouse.getY(), 0, 1, 1, tilesize / 2, tilesize / 2)
-    end
-    
-    if state == "gameover" then
-        love.graphics.setColor(0, 0, 0, 150)
-        love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-        love.graphics.setColor(255, 100, 100, 200)
-        love.graphics.print("Game over")
-    end
 
 end
 
@@ -282,8 +428,8 @@ end
 
 function gameScreen_Camera_shift(x , y)
    
-   xshift = xshift + x
-   yshift = yshift + y
+   xshift = math.max(-500, math.min(xshift + x, 500))
+   yshift = math.max(-500, math.min(yshift + y, 200))
     
 end
 

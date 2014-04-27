@@ -36,6 +36,10 @@ function gameHandler_isTopLevel()
     return active >= size
 end
 
+function gameHandler_isBottomLevel()
+    return active == 1
+end
+
 function gameHandler_LevelCanBeBuilt()
     return #world.layers[active].structures > 0
 end

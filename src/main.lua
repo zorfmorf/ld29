@@ -40,6 +40,10 @@ function love.update(dt)
         gameScreen_update(dt)
     end
     
+    if state == "fin" then
+        gameScreen_update(dt)
+    end
+    
     inputHandler_update(dt)
 end
 
