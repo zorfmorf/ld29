@@ -2,7 +2,7 @@
 local xshift = 0
 local yshift = 0
 local scale = 4
-local scaleV = {0.5, 0.7, 0.85, 1, 1.15, 1.3, 1.5}
+local scaleV = {0.9, 1, 1.15, 1.3, 1.5}
 
 tilesize = 32
 
@@ -44,15 +44,15 @@ function gameScreen_init()
     local system = love.graphics.newParticleSystem( love.graphics.newImage("res/fire.png"), 400 )
     system:setPosition( 0, 0 )
     system:setOffset( 0, 0 )
-    system:setBufferSize( 5000 )
-    system:setEmissionRate( 1000 )
+    system:setBufferSize( 1000 )
+    system:setEmissionRate( 200 )
     system:setEmitterLifetime( -1 )
     system:setParticleLifetime( 5, 5 )
     system:setColors( 255, 100, 0, 0, 255, 255, 0, 123 )
     system:setSizes( 1, 3, 1 )
     system:setSpeed( 400, 500  )
     system:setDirection( math.rad(270) )
-    system:setSpread( math.rad(90) )
+    system:setSpread( math.rad(60) )
     system:setRotation( math.rad(0), math.rad(0) )
     system:setSpin( math.rad(0.5), math.rad(1), 1 )
     system:setRadialAcceleration( 0 )
@@ -78,9 +78,9 @@ function gameScreen_update(dt)
         fintimer = fintimer + dt
         
         if finstate == 0 then
-            scale = 4
+            scale = 5
             
-            if gameHandler_isBottomLevel() and yshift <= -500 and xshift == 0 then
+            if gameHandler_isBottomLevel() and yshift <= -1000 and xshift == 0 then
                 finstate = 1
                 fintimer = 0
             end
@@ -90,7 +90,7 @@ function gameScreen_update(dt)
                 gameHandler_layerdown()
             end
             
-            if yshift > -500 then yshift = yshift - dt * 200 end
+            if yshift > -1000 then yshift = yshift - dt * 200 end
             if xshift > 0 then xshift = math.max(0, xshift - dt * 200) end
             if xshift < 0 then xshift = math.min(xshift + dt * 200, 0) end
             
@@ -120,17 +120,18 @@ function gameScreen_update(dt)
             xshift = xshift + dt * 100 * findirection
             yshift = math.min(0, yshift + 100 * dt)
             
-            if fintimer2 > 1 then
+            if fintimer2 > 2 then
                 fintimer2 = 0
                 if not gameHandler_isTopLevel() then gameHandler_layerup() end
-                if yshift >= 0 and scale > 1 then scale = scale - 1 end
+                if yshift >= 0 and scale < 5 then scale = scale + 1 end
             end
             
-            if yshift >= 0 and scale == 1 then
+            if yshift >= 0 and scale == 5 then
                 finstate = 3
                 fintimer = 0
                 fintimer2 = 0
                 particles:start()
+                gameHandler_burnVillagers()
             end
         
         end
@@ -145,9 +146,9 @@ function gameScreen_update(dt)
             end
             
             xshift = xshift + dt * 100 * findirection
-            yshift = yshift + dt * 20
+            yshift = yshift + dt * 40
             
-            if yshift > 500 then
+            if yshift > 1000 then
                 finstate = 4
             end
             
@@ -323,7 +324,7 @@ function gameScreen_draw()
             end
             
             for i,guy in pairs(layer.villager) do
-                love.graphics.draw(villager, 
+                love.graphics.draw(charset[guy:getImage()], 
                                     world.x + (guy.x - centerXIndex) * tilesize, 
                                     world.y + (guy.y - centerYIndex  - baseHeight) * tilesize - tilesize,
                                     0, 1, 1, 4, -tilesize - 4)
@@ -443,7 +444,7 @@ function gameScreen_draw()
     end
     
     -- draw questPanel
-    if questHandler_newQuest() then
+    if state == "ingame" and questHandler_newQuest() then
         love.graphics.setColor(0, 0, 0, 180)
         love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
         love.graphics.setColor(255, 255, 255, 255)
@@ -495,7 +496,7 @@ end
 function gameScreen_Camera_shift(x , y)
    
    xshift = math.max(-500, math.min(xshift + x, 500))
-   yshift = math.max(-900, math.min(yshift + y, 200))
+   yshift = math.max(-1000, math.min(yshift + y, 200))
     
 end
 

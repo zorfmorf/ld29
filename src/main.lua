@@ -37,12 +37,8 @@ function love.update(dt)
         loadScreen_update(dt)
     end
     
-    if state == "ingame" then
+    if state == "ingame" or state == "fin" then
         gameHandler_update(dt)
-        gameScreen_update(dt)
-    end
-    
-    if state == "fin" then
         gameScreen_update(dt)
     end
     

@@ -9,6 +9,8 @@ function Villager:__init(x, y, layer)
     self.x = x
     self.y = y
     self.layer = layer
+    self.animcycle = 0
+    self.action = "idle"
     self.path = nil
     self.id = id
     id = id + 1
@@ -16,7 +18,39 @@ end
 
 function Villager:generateTask()
     
-    if #world.tasks > 0 then self.task = table.remove(world.tasks, 1) end
+    if self.action == "burn" then
+        
+            local cand = math.random(1, #world.layers[5].structures)
+            
+            if world.layers[5].structures[cand] ~= nil then
+        
+                self.task = {5, world.layers[5].structures[cand] }
+            
+            end
+       
+    else 
+        
+        if #world.tasks > 0 then self.task = table.remove(world.tasks, 1) end 
+        
+    end
+end
+
+function Villager:getImage()
+    
+    if self.action == "idle" then
+        return "idle"
+    end
+    
+    if self.action == "harvest" then
+        return "work"..math.floor(self.animcycle)      
+    end
+    
+    if self.action == "burn" then
+        return "burn"..math.floor(self.animcycle)      
+    end
+    
+    return "down"..math.floor(self.animcycle)
+    
 end
 
 function Villager:generatePath()
@@ -73,28 +107,50 @@ end
 
 function Villager:update(dt)
     
-    if self.task == nil then self:generateTask() return end
+    if self.task == nil then 
+        self:generateTask() 
+        self.animcycle = 0  
+        if self.action ~= "burn" then self.action = "idle" end
+    end
+    
+    if self.action == "burn" and self.task == nil then
+        print(" And have no task")
+    end
     
     if self.task ~= nil then
+        
+        self.animcycle = self.animcycle + dt * 12
+        
+        if self.animcycle >= 3 then
+            self.animcycle = self.animcycle - 3
+        end
+        
+        
         
         local task = self.task[2]
         
         if self.layer == self.task[1] and self.x == task.x and self.y == task.y then
-            self.path = nil
-            task:harvest(dt)
-            if task.durability <= 0 then 
-                self.task = nil 
-                if task.__name == "hut" then 
-                    local v = Villager:new(self.x, self.y, self.layer)
-                    world.layers[self.layer].villager[v.id] = v
-                end
-                
-                if task.__name == "shaft" then 
-                    world.layers[self.layer - 1].available = true
+            if self.action == "burn" then
+                self.task = nil
+                self.path = nil
+            else
+                self.path = nil
+                self.action = "harvest"
+                task:harvest(dt)
+                if task.durability <= 0 then 
+                    self.task = nil 
+                    if task.__name == "hut" then 
+                        local v = Villager:new(self.x, self.y, self.layer)
+                        world.layers[self.layer].villager[v.id] = v
+                    end
+                    
+                    if task.__name == "shaft" then 
+                        world.layers[self.layer - 1].available = true
+                    end
                 end
             end
         else
-            
+            if self.action ~= "burn" then self.action = "walk" end
             -- check if we need to change elevation
             if self.path ~= nil and #self.path == 0 then
                 for i,cand in pairs(world.layers[self.layer].structures) do

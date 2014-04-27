@@ -26,6 +26,32 @@ function gameHandler_init()
     
 end
 
+function gameHandler_burnVillagers()
+    
+    local rallyPoint = nil
+    for i,struct in pairs(world.layers[5].structures) do
+        rallyPoint = struct
+        break
+    end
+    
+    for i = 1,5 do
+        
+        for i,cand in pairs(world.layers[i].villager) do
+            
+            cand.action = "burn"
+            cand.path = nil
+            cand.task = nil
+            if i < 5 then
+                
+                cand.task = {5, rallyPoint}
+                
+            end
+            
+        end
+        
+    end
+end
+
 function gameHandler_allowHut()
     buildings["hut11"] = Hut:new()
 end
@@ -92,7 +118,6 @@ local function getStruct(x, y)
     return "nüscht nil" --- iiiieeeeeeeh was ist denn das da im code
 
 end
-
 
 local function isClearable(rock)
     

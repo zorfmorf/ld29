@@ -7,10 +7,10 @@ local newQuest = 0
 function questHandler_init()
     
     quest[0] = {"Placeholder", nil, 0}
-    quest[1] = {"Look at the conditions we have to live in! Huts made of twigs and leafs! To be shared by many! Any beggar has a better life than me ... us! This needs to change!\n But before we can start we need more WOOD.\n Go fell some TREES!", "Fell some trees", 0}
+    quest[1] = {"Look at the conditions we have to live in! Huts made of twigs and leafs! To be shared by many! Any beggar has a better life than me ... us! This needs to change!\n But before we can start we need more wood.\n Get it done!", "Fell some trees", 0}
     quest[2] = {"Excellent! Now that we gathered some wood we can finally BUILD more HUTS! Two should suffice!", "Build huts", 0}
     quest[3] = {"That took quite long, didn't it? Hurry up, we need some stone. And to get stone we need a mineshaft.", "Build mineshaft", 0}
-    quest[4] = {"You're not the fastest one are you? \n Well enought of that. Now that we have access to stone we can finally upgrade our huts! Get us some stone and use it to improve our huts. And make sure that hurry this time, will you?.", "Gather Stone, Upgrade huts", 0}
+    quest[4] = {"You're not the fastest one are you? \n Well enought of that. Now that we have access to stone we can finally upgrade our huts! Get us some stone and use it to improve our huts. And make sure that you hurry this time, will you?.", "Gather Stone, Upgrade huts", 0}
     quest[5] = {"Now THAT's befitting for a man of my stature. However, thanks to your carelessness, we are low on tools. You can make amends by mining some iron and building a smithy.",  "Mine iron. Build smithy", 0}
     quest[6] = {"What? A smithy? Why would you build that? Didn't you hear? There may be GOLD down there! We need to get it! NOW!!", "Mine Gold", 0}
     quest[7] = {"MORE! GET ME MORE!", "Get More", 0}
@@ -26,10 +26,10 @@ function questHandler_acceptQuest()
 end
 
 function questHandler_getBerny()
-    if currentQuest == 3 or currentQuest == 4 then
+    if currentQuest == 3 or currentQuest == 4 or currentQuest == 5 then
         return berny_stressed
     end
-    if currentQuest == 5 or currentQuest == 6 or currentQuest == 7 then
+    if currentQuest == 6 or currentQuest == 7 then
         return berny_angry
     end
     if currentQuest == 8 then
@@ -83,7 +83,7 @@ function questHandler_hutBuilt()
 end
 
 function questHandler_goldMined()
-    if currentQuest ~= 8 then
+    if currentQuest < 7 then
         currentQuest = 7
         newQuest = 1
     end
