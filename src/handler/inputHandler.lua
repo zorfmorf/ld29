@@ -26,6 +26,8 @@ function inputHandler_keypressed(key, isrepeat)
    
     if key == "escape" then love.event.push("quit") end
     
+    if state == "loading" then if key == " " then loadScreen_spacePressed() end end
+    
     if state == "ingame" then
         if key == "up" then gameHandler_layerup() end
         if key == "down" then gameHandler_layerdown() end

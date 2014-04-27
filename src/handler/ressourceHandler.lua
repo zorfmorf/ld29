@@ -6,6 +6,12 @@ function ressourceHandler_loadTiles()
     berny_stressed = love.graphics.newImage("res/berny_stressed.png")
     berny_fearful = love.graphics.newImage("res/berny_fearful.png")
     
+    
+    tut_mouse = love.graphics.newImage("res/mouse.png")
+    tut_build = love.graphics.newImage("res/build.png")
+    tut_ressources = love.graphics.newImage("res/ressources.png")
+    tut_layer = love.graphics.newImage("res/layer.png")
+    
     tileset = {}
     
     local tileSource = love.image.newImageData("res/tileset.png")
@@ -155,5 +161,4 @@ function ressourceHandler_loadTiles()
     imgData:paste(tileSource, 0, 0, 16, 24, 8, 12)
     charset["burn2"] = love.graphics.newImage(imgData)
     
-    villager = love.graphics.newImage(imgData)
 end
