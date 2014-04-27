@@ -11,7 +11,7 @@ end
 function Structure:affordable()
     
     for t,c in pairs(self.cost) do
-        if ressources[t] < c then return false end
+        if ressources[t] == nil or ressources[t] < c then return false end
     end
     
     return true
@@ -34,12 +34,13 @@ function Hut:getImage()
     if self.stage == 0 then
         return "sign"
     end
-    return "hut"..self.stage
+    return "hut"..self.stage..self.t
 end
 function Hut:__init(x, y)
     self.x = x
     self.y = y
     self.durability = 3
+    self.t = math.random(1, 2)
 end
 function Hut:upgradable()
     
@@ -62,15 +63,41 @@ function Hut:harvest(dt)
     self.durability = self.durability - dt
     if self.durability <= 0 then
         self.stage = math.min(self.stage + 1, 2)
+        if self.stage == 2 then
+            questHandler_hutUpgraded()
+        end
         self.flagged = false
+        questHandler_hutBuilt()
+    end
+end
+
+--------------------SMITHY
+Smith = Structure:extends{
+    cost = { wood=1,iron=1,stone=1 }
+}
+Smith.__name = "smith"
+function Smith:__init(x, y)
+    self.x = x
+    self.y = y
+    self.durability = 3
+    self.image = "sign"
+end
+function Smith:getImage()
+    return self.image
+end
+function Smith:harvest(dt)
+    self.durability = self.durability - dt
+    if self.durability <= 0 then
+        questHandler_smithBuilt()
+        self.flagged = false
+        self.image = "shaft"
     end
 end
 
 
 ------------------- SHAFT
 Shaft = Structure:extends{
-    cost = { wood=2 },
-    yield = { stone=1 }
+    cost = { wood=2 }
 }
 Shaft.__name = "shaft"
 function Shaft:__init(x, y)
@@ -87,6 +114,7 @@ function Shaft:harvest(dt)
     if self.durability <= 0 then
         self.flagged = false
         self.image = "shaft"
+        questHandler_shaftBuilt()
     end
 end
 
@@ -136,6 +164,7 @@ function Rock:yield()
         if ressources["gold"] == nil then
             ressources["gold"] = 0
         end
+        questHandler_goldMined()
         ressources["gold"] = ressources["gold"] + 1 
     end
 end
@@ -156,7 +185,7 @@ function Diamond:harvest(dt)
     self.durability = self.durability - dt
     if self.durability <= 0 then
         self.flagged = false
-        state = "fin"
+        questHandler_diamondMined()
     end
 end
 
@@ -175,7 +204,8 @@ function Tree:harvest(dt)
     if self.durability <= 0 then
         self.image = "stump"
         self.flagged = false
-        ressources["wood"] = ressources["wood"] + 1
+        questHandler_treeCut() 
+        ressources["wood"] = ressources["wood"] + 2
     end
 end
 function Tree:getImage()

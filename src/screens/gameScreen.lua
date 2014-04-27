@@ -20,6 +20,7 @@ local finalpha = 0
 
 function gameScreen_init()
     finFont = love.graphics.newFont(60)
+    questFont = love.graphics.newFont(22)
     local size = math.max(love.graphics:getWidth(), love.graphics:getHeight())
     local imgData = love.image.newImageData(size, size)
     for i=1,size*2 do
@@ -334,7 +335,7 @@ function gameScreen_draw()
     love.graphics.setColor(255, 255, 255, 255)
     
     
-    if state == "ingame" then
+    if state == "ingame" and not questHandler_newQuest() then
     
         --menu bar ?
         --love.graphics.rectangle("fill", love.graphics.getWidth() - 50, 0, 50, love.graphics.getHeight())
@@ -417,11 +418,31 @@ function gameScreen_draw()
             
         end
         
+        --quest short info
+        if questHandler_getShortQuestText() ~= nil then
+            love.graphics.setFont(questFont)
+            love.graphics.setColor(255, 255, 255, 255)
+            love.graphics.print("Current Task: "..questHandler_getShortQuestText(), 10, 10)
+        end
+        
         -- draw mouse icon if necessary
         
         if gameState ~= "free" then
             love.graphics.draw(tileset[gameState], love.mouse.getX(), love.mouse.getY(), 0, 1, 1, tilesize / 2, tilesize / 2)
         end
+
+    end
+    
+    -- draw questPanel
+    if questHandler_newQuest() then
+        love.graphics.setColor(0, 0, 0, 180)
+        love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+        love.graphics.setColor(255, 255, 255, 255)
+        love.graphics.draw(berny, love.graphics.getWidth() / 2 - 300, love.graphics.getHeight() / 2, 0, 1, 1, 32, 32)
+        love.graphics.setFont(questFont)
+        local w, wrap = questFont:getWrap(questHandler_getCurrentQuestText(), 600)
+        love.graphics.printf(questHandler_getCurrentQuestText(), love.graphics.getWidth() / 2 - 200,
+            love.graphics.getHeight() / 2, 600, "left", 0, 1, 1, 0, questFont:getHeight() * wrap / 2)
     end
     
     if state == "fin" then

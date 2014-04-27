@@ -9,6 +9,7 @@ require 'model/world'
 require 'handler/gameHandler'
 require 'handler/inputHandler'
 require 'handler/ressourceHandler'
+require 'handler/questHandler'
 
 require 'screens/gameScreen'
 require 'screens/loadScreen'
@@ -26,6 +27,7 @@ function love.load()
     gameHandler_init()
     gameScreen_init()
     loadScreen_init()
+    questHandler_init()
     
 end
 

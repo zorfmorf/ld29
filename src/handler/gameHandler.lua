@@ -23,9 +23,19 @@ function gameHandler_init()
     ressources["stone"] = 0
     
     buildings = {}
-    buildings["hut1"] = Hut:new()
-    buildings["shaft"] = Shaft:new()
     
+end
+
+function gameHandler_allowHut()
+    buildings["hut11"] = Hut:new()
+end
+
+function gameHandler_allowShaft()
+    buildings["shaft"] = Shaft:new()
+end
+
+function gameHandler_allowSmithy()
+    buildings["smith"] = Smith:new()
 end
 
 function gameHandler_canGoDown()
@@ -169,6 +179,16 @@ function gameHandler_update(dt)
                         local hut = Hut:new(id[1], id[2])
                         world.tasks[#world.tasks + 1] = {active, hut}
                         table.insert(world.layers[active].structures, hut)
+                        buildings[gameState]:pay()
+                        gameState = "free"
+                        love.mouse.setVisible(true)
+                        break
+                    end
+                    
+                    if buildings[gameState].__name == "smith" and plotIsEmpty(id[1], id[2]) then
+                        local smith = Smith:new(id[1], id[2])
+                        world.tasks[#world.tasks + 1] = {active, smith}
+                        table.insert(world.layers[active].structures, smith)
                         buildings[gameState]:pay()
                         gameState = "free"
                         love.mouse.setVisible(true)

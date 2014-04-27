@@ -30,6 +30,7 @@ function inputHandler_keypressed(key, isrepeat)
         if key == " " then state = "fin" end
         if key == "up" then gameHandler_layerup() end
         if key == "down" then gameHandler_layerdown() end
+        if key == "return" then questHandler_acceptQuest() end
     end
    
 end

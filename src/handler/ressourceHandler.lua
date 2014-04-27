@@ -1,6 +1,8 @@
 
 function ressourceHandler_loadTiles()
     
+    berny = love.graphics.newImage("res/berny.png")
+    
     tileset = {}
     
     local tileSource = love.image.newImageData("res/tileset.png")
@@ -63,9 +65,15 @@ function ressourceHandler_loadTiles()
     
     --buildings and placeables
     imgData:paste(tileSource, 0, 0, 2 * tilesize, 2 * tilesize, tilesize, tilesize)
-    tileset["hut1"] = love.graphics.newImage(imgData)
+    tileset["hut11"] = love.graphics.newImage(imgData)
     imgData:paste(tileSource, 0, 0, 3 * tilesize, 2 * tilesize, tilesize, tilesize)
-    tileset["hut2"] = love.graphics.newImage(imgData)
+    tileset["hut12"] = love.graphics.newImage(imgData)
+    imgData:paste(tileSource, 0, 0, 6 * tilesize, 2 * tilesize, tilesize, tilesize)
+    tileset["hut21"] = love.graphics.newImage(imgData)
+    imgData:paste(tileSource, 0, 0, 7 * tilesize, 2 * tilesize, tilesize, tilesize)
+    tileset["hut22"] = love.graphics.newImage(imgData)
+    imgData:paste(tileSource, 0, 0, 8 * tilesize, 2 * tilesize, tilesize, tilesize)
+    tileset["smith"] = love.graphics.newImage(imgData)
     imgData:paste(tileSource, 0, 0, 5 * tilesize, 2 * tilesize, tilesize, tilesize)
     tileset["sign"] = love.graphics.newImage(imgData)
     imgData:paste(tileSource, 0, 0, 4 * tilesize, 2 * tilesize, tilesize, tilesize)
