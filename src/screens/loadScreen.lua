@@ -72,21 +72,23 @@ function loadScreen_draw()
         love.graphics.draw(christ, love.graphics:getWidth() / 2, love.graphics:getHeight() / 2, 0, 1, 1,
             christ:getWidth() / 2, christ:getHeight() / 2)
         
-        
     else 
     
         love.graphics.setColor(255, 255, 255, 255)
         
         love.graphics.setFont(realtitlefont)
-        local tmp = "Gametitle"
-        love.graphics.print(tmp, love.graphics.getWidth() / 2, 50, 
-                0, 1, 1, realtitlefont:getWidth(tmp) / 2, realtitlefont:getHeight() / 2)
+        
+        if not showHelp then 
+            local tmp = "Mayoran"
+            love.graphics.print(tmp, love.graphics.getWidth() / 2, 50, 
+                    0, 1, 1, realtitlefont:getWidth(tmp) / 2, realtitlefont:getHeight() / 2)
+        end
         
         
         love.graphics.setFont(titlefont)
         
         tmp = "Quickguide"
-        love.graphics.print(tmp, love.graphics.getWidth() / 2, 120, 
+        love.graphics.print(tmp, love.graphics.getWidth() / 2, 140, 
                 0, 1, 1, titlefont:getWidth(tmp) / 2, titlefont:getHeight() / 2)
             
         
@@ -110,12 +112,14 @@ function loadScreen_draw()
         love.graphics.printf("Build things here!", love.graphics.getWidth() - 200, love.graphics.getHeight() - 180, 200)
         love.graphics.draw(tut_build, love.graphics.getWidth() - 80, love.graphics.getHeight() - 150 )
 
-        if ready then
-            local string = "Press space to start game... "
-            love.graphics.print(string, love.graphics.getWidth() / 2, love.graphics:getHeight() - 60, 
-                0, 1, 1, font:getWidth(string) / 2, font:getHeight() / 2)
-        else
-            love.graphics.rectangle("fill", 300, love.graphics:getHeight() - 80, (love.graphics:getWidth() - 600) * loadValue, 30)
+        if not showHelp then 
+            if ready then
+                local string = "Press space to start game... "
+                love.graphics.print(string, love.graphics.getWidth() / 2, love.graphics:getHeight() - 60, 
+                    0, 1, 1, font:getWidth(string) / 2, font:getHeight() / 2)
+            else
+                love.graphics.rectangle("fill", 300, love.graphics:getHeight() - 80, (love.graphics:getWidth() - 600) * loadValue, 30)
+            end
         end
     end
     

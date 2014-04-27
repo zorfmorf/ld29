@@ -12,7 +12,7 @@ local stars = nil
 local bkg = nil
 local bkgrotation = 0
 
-local finstate = 0
+finstate = 0
 local fintimer = 0
 local fintimer2 = 0
 local findirection = 0
@@ -44,20 +44,20 @@ function gameScreen_init()
     local system = love.graphics.newParticleSystem( love.graphics.newImage("res/fire.png"), 400 )
     system:setPosition( 0, 0 )
     system:setOffset( 0, 0 )
-    system:setBufferSize( 1000 )
-    system:setEmissionRate( 200 )
+    system:setBufferSize( 3000 )
+    system:setEmissionRate( 600 )
     system:setEmitterLifetime( -1 )
     system:setParticleLifetime( 5, 5 )
-    system:setColors( 255, 100, 0, 0, 255, 255, 0, 123 )
+    system:setColors( 255, 100, 10, 100, 255, 255, 0, 223 )
     system:setSizes( 1, 3, 1 )
-    system:setSpeed( 400, 500  )
+    system:setSpeed( 450, 550  )
     system:setDirection( math.rad(270) )
-    system:setSpread( math.rad(60) )
+    system:setSpread( math.rad(70) )
     system:setRotation( math.rad(0), math.rad(0) )
     system:setSpin( math.rad(0.5), math.rad(1), 1 )
     system:setRadialAcceleration( 0 )
     system:setTangentialAcceleration( 0 )
-    system:setLinearAcceleration( 0, 200, 0, 400 )
+    system:setLinearAcceleration( 0, 400, 0, 500 )
     
     particles = system
 
@@ -344,104 +344,108 @@ function gameScreen_draw()
     love.graphics.origin()
     love.graphics.setColor(255, 255, 255, 255)
     
+    if showHelp then
+        loadScreen_draw()
+    else 
     
-    if state == "ingame" and not questHandler_newQuest() then
-    
-        --menu bar ?
-        --love.graphics.rectangle("fill", love.graphics.getWidth() - 50, 0, 50, love.graphics.getHeight())
+        if state == "ingame" and not questHandler_newQuest() then
         
-        -- ressource display
-        local sh = 10
-        if ressources["wood"] ~= nil then        
-            love.graphics.draw(tileset["wood"], love.graphics.getWidth() - tilesize - 5, sh)
-            love.graphics.print(ressources["wood"], love.graphics.getWidth() - tilesize - 40, sh + tilesize / 3)
-            sh = sh + 40
-        end
-        if ressources["stone"] ~= nil then        
-            love.graphics.draw(tileset["stone"], love.graphics.getWidth() - tilesize - 5, sh)
-            love.graphics.print(ressources["stone"], love.graphics.getWidth() - tilesize - 40, sh + tilesize / 3)
-            sh = sh + 40
-        end
-        if ressources["iron"] ~= nil then        
-            love.graphics.draw(tileset["iron"], love.graphics.getWidth() - tilesize - 5, sh)
-            love.graphics.print(ressources["iron"], love.graphics.getWidth() - tilesize - 40, sh + tilesize / 3)
-            sh = sh + 40
-        end
-        if ressources["gold"] ~= nil then        
-            love.graphics.draw(tileset["gold"], love.graphics.getWidth() - tilesize - 5, sh)
-            love.graphics.print(ressources["gold"], love.graphics.getWidth() - tilesize - 40, sh + tilesize / 3)
-            sh = sh + 40
-        end
-        
-        
-        -- scale arrows
-        local x, y = love.mouse.getPosition()
-        
-        if gameHandler_canGoDown() then
-            love.graphics.setColor(255, 255, 255, 255)
-            local sc = 1
-            if math.abs(x - (love.graphics.getWidth() - tilesize - 5)) < tilesize / 1.5 and 
-                math.abs(y - (love.graphics.getHeight() - tilesize * 8)) < tilesize / 1.5 then
-                
-                sc = 1.5
+            love.graphics.print("F1: Help", love.graphics.getWidth() - tilesize - 250, 10)
+            
+            -- ressource display
+            local sh = 10
+            if ressources["wood"] ~= nil then        
+                love.graphics.draw(tileset["wood"], love.graphics.getWidth() - tilesize - 5, sh)
+                love.graphics.print(ressources["wood"], love.graphics.getWidth() - tilesize - 40, sh + tilesize / 3)
+                sh = sh + 40
+            end
+            if ressources["stone"] ~= nil then        
+                love.graphics.draw(tileset["stone"], love.graphics.getWidth() - tilesize - 5, sh)
+                love.graphics.print(ressources["stone"], love.graphics.getWidth() - tilesize - 40, sh + tilesize / 3)
+                sh = sh + 40
+            end
+            if ressources["iron"] ~= nil then        
+                love.graphics.draw(tileset["iron"], love.graphics.getWidth() - tilesize - 5, sh)
+                love.graphics.print(ressources["iron"], love.graphics.getWidth() - tilesize - 40, sh + tilesize / 3)
+                sh = sh + 40
+            end
+            if ressources["gold"] ~= nil then        
+                love.graphics.draw(tileset["gold"], love.graphics.getWidth() - tilesize - 5, sh)
+                love.graphics.print(ressources["gold"], love.graphics.getWidth() - tilesize - 40, sh + tilesize / 3)
+                sh = sh + 40
             end
             
-            love.graphics.draw(tileset["arrow_down"], love.graphics.getWidth() - tilesize - 5, love.graphics.getHeight() - tilesize * 8, 0, 
-                            sc, sc, tilesize / 2, tilesize / 2)
-        end
-        
-        if not world.layers[5].active then
-            love.graphics.setColor(255, 255, 255, 255)
-            local sc = 1
-            if math.abs(x - (love.graphics.getWidth() - tilesize - 5)) < tilesize / 1.5 and 
-                math.abs(y - (love.graphics.getHeight() - tilesize * 10 - 5)) < tilesize / 1.5 then
-                
-                sc = 1.5
-            end
-            love.graphics.draw(tileset["arrow_up"], love.graphics.getWidth() - tilesize - 5, love.graphics.getHeight() - tilesize * 10 - 5, 0,
-                                sc, sc, tilesize / 2, tilesize / 2)
-        end
-        
-        --build panel
-        sh = 10
-        for i,build in pairs(buildings) do
             
-            love.graphics.setColor(255, 255, 255, 255)
+            -- scale arrows
+            local x, y = love.mouse.getPosition()
             
-            if world.layers[1].active or not gameHandler_LevelCanBeBuilt() or not build:affordable() 
-                or (not gameHandler_isTopLevel() and (build.__name == "hut" or build.__name == "smith")) then 
-                love.graphics.setColor(100, 100, 100, 150)
-            else
-                
-                
-                if math.abs((love.graphics.getWidth() - tilesize - 10) - (x - tilesize / 2)) < tilesize / 2 and
-                   math.abs((love.graphics.getHeight() - tilesize * 1.5 - sh) - (y - tilesize / 2)) < tilesize / 2 then
-                    love.graphics.setColor(230, 130, 130, 150)
+            if gameHandler_canGoDown() then
+                love.graphics.setColor(255, 255, 255, 255)
+                local sc = 1
+                if math.abs(x - (love.graphics.getWidth() - tilesize - 5)) < tilesize / 1.5 and 
+                    math.abs(y - (love.graphics.getHeight() - tilesize * 8)) < tilesize / 1.5 then
                     
-                    -- bad style but we will use this place to handle clicks as we already know everything relevant
-                    if love.mouse.isDown( "l" ) then gameHandler_buildClicked(i) end
+                    sc = 1.5
                 end
+                
+                love.graphics.draw(tileset["arrow_down"], love.graphics.getWidth() - tilesize - 5, love.graphics.getHeight() - tilesize * 8, 0, 
+                                sc, sc, tilesize / 2, tilesize / 2)
             end
             
-            love.graphics.draw(tileset[i], love.graphics.getWidth() - tilesize - 10, love.graphics.getHeight() - tilesize * 1.5 - sh)
-            sh = sh + 40
+            if not world.layers[5].active then
+                love.graphics.setColor(255, 255, 255, 255)
+                local sc = 1
+                if math.abs(x - (love.graphics.getWidth() - tilesize - 5)) < tilesize / 1.5 and 
+                    math.abs(y - (love.graphics.getHeight() - tilesize * 10 - 5)) < tilesize / 1.5 then
+                    
+                    sc = 1.5
+                end
+                love.graphics.draw(tileset["arrow_up"], love.graphics.getWidth() - tilesize - 5, love.graphics.getHeight() - tilesize * 10 - 5, 0,
+                                    sc, sc, tilesize / 2, tilesize / 2)
+            end
             
-        end
-        
-        --quest short info
-        if questHandler_getShortQuestText() ~= nil then
-            love.graphics.setFont(questFont)
-            love.graphics.setColor(255, 255, 255, 255)
-            love.graphics.print("Current Task: "..questHandler_getShortQuestText(), 10, 10)
-        end
-        
-        -- draw mouse icon if necessary
-        
-        if gameState ~= "free" then
-            love.graphics.draw(tileset[gameState], love.mouse.getX(), love.mouse.getY(), 0, 1, 1, tilesize / 2, tilesize / 2)
+            --build panel
+            sh = 10
+            for i,build in pairs(buildings) do
+                
+                love.graphics.setColor(255, 255, 255, 255)
+                
+                if world.layers[1].active or not gameHandler_LevelCanBeBuilt() or not build:affordable() 
+                    or (not gameHandler_isTopLevel() and (build.__name == "hut" or build.__name == "smith")) then 
+                    love.graphics.setColor(100, 100, 100, 150)
+                else
+                    
+                    
+                    if math.abs((love.graphics.getWidth() - tilesize - 10) - (x - tilesize / 2)) < tilesize / 2 and
+                       math.abs((love.graphics.getHeight() - tilesize * 1.5 - sh) - (y - tilesize / 2)) < tilesize / 2 then
+                        love.graphics.setColor(230, 130, 130, 150)
+                        
+                        -- bad style but we will use this place to handle clicks as we already know everything relevant
+                        if love.mouse.isDown( "l" ) then gameHandler_buildClicked(i) end
+                    end
+                end
+                
+                love.graphics.draw(tileset[i], love.graphics.getWidth() - tilesize - 10, love.graphics.getHeight() - tilesize * 1.5 - sh)
+                sh = sh + 40
+                
+            end
+            
+            --quest short info
+            if questHandler_getShortQuestText() ~= nil then
+                love.graphics.setFont(questFont)
+                love.graphics.setColor(255, 255, 255, 255)
+                love.graphics.print("Current Task: "..questHandler_getShortQuestText(), 10, 10)
+            end
+            
+            -- draw mouse icon if necessary
+            
+            if gameState ~= "free" then
+                love.graphics.draw(tileset[gameState], love.mouse.getX(), love.mouse.getY(), 0, 1, 1, tilesize / 2, tilesize / 2)
+            end
         end
 
     end
+    
     
     -- draw questPanel
     if state == "ingame" and questHandler_newQuest() then
@@ -459,7 +463,7 @@ function gameScreen_draw()
     
     if state == "fin" then
         love.graphics.setColor(255, 255, 255, 255)
-        love.graphics.draw(particles, love.graphics:getWidth() / 2, love.graphics.getHeight() * 1.3)
+        love.graphics.draw(particles, love.graphics:getWidth() / 2, love.graphics.getHeight() * 1.2)
         
         if finstate == 4 then
             

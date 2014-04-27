@@ -8,6 +8,8 @@ ressources = nil
 
 buildings = nil
 
+showHelp = false
+
 local structureEventQueue = {}
 local fieldEventQueue = {}
 

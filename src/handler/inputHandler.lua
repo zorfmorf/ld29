@@ -27,7 +27,9 @@ end
 
 function inputHandler_keypressed(key, isrepeat)
    
-    if key == "escape" then love.event.push("quit") end
+    if key == "escape" then showHelp = false end
+    
+    if state == "fin" and finstate == 4 then love.event.push('quit') end
     
     if state == "loading" then
         if konamichain[konamicurrent] ~= nil and key == konamichain[konamicurrent] then 
@@ -44,7 +46,9 @@ function inputHandler_keypressed(key, isrepeat)
     
     if state == "ingame" then
         if key == " " then questHandler_acceptQuest() end
-        --if key == "return" then state = "fin" end
+        
+        if key == "f1" then showHelp = not showHelp end
+        if key == "return" then state = "fin" end
     end
    
 end

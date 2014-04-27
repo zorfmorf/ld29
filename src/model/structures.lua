@@ -90,7 +90,7 @@ function Smith:harvest(dt)
     if self.durability <= 0 then
         questHandler_smithBuilt()
         self.flagged = false
-        self.image = "shaft"
+        self.image = "smith"
     end
 end
 
