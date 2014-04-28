@@ -86,7 +86,8 @@ function gameHandler_LevelCanBeBuilt()
 end
 
 function gameHandler_shaftCanBeBuilt(lvl, x, y)
-    return lvl > 1 and world.layers[lvl - 1].inner[y] ~= nil and world.layers[lvl - 1].inner[y][x] ~= nil
+    return lvl > 1 and world.layers[lvl - 1].inner[y] ~= nil and world.layers[lvl - 1].inner[y][x] ~= nil 
+                   and world.layers[lvl - 1].inner[y][x]:len() < 12 
 end
 
 local function respawnDiamond()
